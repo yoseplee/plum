@@ -6,7 +6,7 @@ MAINTAINER yoseplee
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -qq update && apt-get -y -qq dist-upgrade
 
 # install openjdk and other programs
-RUN DEBIAN_FRONTEND=noninteractive && apt-get -qq install -y vim screen wget git curl openjdk-8-jdk
+RUN DEBIAN_FRONTEND=noninteractive && apt-get -qq install -y vim net-tools screen wget git curl openjdk-8-jdk
 
 # copy necessary files
 ADD init.sh /peer/
