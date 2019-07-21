@@ -9,13 +9,10 @@ public class Client {
 
     public static void main(String[] args) {
 
-        String host = (args.length < 1) ? null : args[0];
-        // int port = (args.length < 1) ? null : Integer.parseInt(args[1]);
+        String port = (args.length < 1) ? null : args[0];
         try {
-            // System.out.println("HOST:: " + host + "port:: " + port);
-            // Registry registry = LocateRegistry.getRegistry(host);
-            Registry registry = LocateRegistry.getRegistry("127.0.0.1:32120");
-            Hello stub = (Hello) registry.lookup("Hello");
+            Registry registry = LocateRegistry.getRegistry(Integer.parseInt(port));
+            Hello stub = (Hello) registry.lookup("Hello1");
             // Hello stub = (Hello) registry.lookup("Hello1");
             // Hello stub = (Hello) registry.lookup("Hello2");
             String response = stub.sayHello();
