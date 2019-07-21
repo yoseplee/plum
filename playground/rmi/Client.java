@@ -14,7 +14,7 @@ public class Client {
         try {
             // System.out.println("HOST:: " + host + "port:: " + port);
             // Registry registry = LocateRegistry.getRegistry(host);
-            Registry registry = LocateRegistry.getRegistry(host);
+            Registry registry = LocateRegistry.getRegistry("127.0.0.1:32120");
             Hello stub = (Hello) registry.lookup("Hello");
             // Hello stub = (Hello) registry.lookup("Hello1");
             // Hello stub = (Hello) registry.lookup("Hello2");

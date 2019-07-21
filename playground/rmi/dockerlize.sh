@@ -8,5 +8,5 @@ docker build --tag $image_name:$version -f ../../dockerfile/peer/Dockerfile .
 
 docker stop $container_name 
 docker rm $container_name 
-docker run -t --name $container_name -d $image_name:$version
+docker run -t --name $container_name --network="bridge" -d $image_name:$version
 echo "dockerize done on version $version"
