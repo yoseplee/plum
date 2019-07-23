@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  peer1:
+    container_name: peer1
+    image: yoseplee/plum:0.1
+    working_dir: /peer/
+  peer2:
+    container_name: peer2
+    image: yoseplee/plum:0.1
+    working_dir: /peer/
+  peer3:
+    container_name: peer3
+    image: yoseplee/plum:0.1
+    working_dir: /peer/
+  peer4:
+    container_name: peer4
+    image: yoseplee/plum:0.1
+    working_dir: /peer/
+  peer5:
+    container_name: peer5
+    image: yoseplee/plum:0.1
+    working_dir: /peer/
