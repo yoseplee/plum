@@ -9,21 +9,17 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get -qq update && apt-get -y -qq dist-
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -qq install -y vim net-tools screen wget git curl openjdk-8-jdk
 
 # copy necessary files
-ADD init.sh /peer/
-ADD Server.java /peer/playground/rmi/
-ADD Hello.java /peer/playground/rmi/
-ADD Client.java /peer/playground/rmi/
-
-#ADD /Users/yosep/Documents/github/peer-network/playground/rmi/Hello.java /playground/rmi/
-
-WORKDIR /peer/playground/rmi/
-RUN pwd
+ADD init.sh /plum/
+ADD Server.java /plum/peer/rmi/
+ADD MessageIF.java /plum/peer/rmi/
+ADD Client.java /plum/peer/rmi/
 
 # compile server program
-RUN javac Server.java Hello.java Client.java
+WORKDIR /plum/peer/rmi/
+RUN javac *.java
 
-WORKDIR /peer
 # run rmiregistry and server program
+WORKDIR /plum
 ENTRYPOINT [ "/peer/init.sh" ]
 
 EXPOSE 1099
