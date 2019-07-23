@@ -4,6 +4,7 @@ import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class Peer implements MessageIF {
@@ -23,6 +24,18 @@ public class Peer implements MessageIF {
         System.out.println("I've got message:: " + message);
     }
 
+    @Override
+    public String getIP() throws RemoteException {
+        String myip = "";
+        try {
+            InetAddress local = InetAddress.getLocalHost();
+            myip = local.getHostAddress().toString();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return myip;
+    }
+
     public static void main(String args[]) {
         try {
             Peer obj = new Peer();
@@ -38,6 +51,4 @@ public class Peer implements MessageIF {
             e.printStackTrace();
         }
     }
-
-
 }

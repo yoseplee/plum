@@ -16,6 +16,9 @@ public class Client {
             String response = stub.sayHello();
             stub.sendMessage("hell!");
             System.out.println("response: " + response);
+
+            response = stub.getIP();
+            System.out.println("response: " + response);
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
