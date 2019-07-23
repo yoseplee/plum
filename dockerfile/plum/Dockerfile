@@ -10,16 +10,16 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get -qq install -y vim net-tools scree
 
 # copy necessary files
 ADD init.sh /plum/
-ADD Server.java /plum/peer/rmi/
+ADD Peer.java /plum/peer/rmi/
 ADD MessageIF.java /plum/peer/rmi/
 ADD Client.java /plum/peer/rmi/
 
-# compile server program
+# compile Peer program
 WORKDIR /plum/peer/rmi/
 RUN javac *.java
 
-# run rmiregistry and server program
+# run rmiregistry and Peer program
 WORKDIR /plum
-ENTRYPOINT [ "/peer/init.sh" ]
+ENTRYPOINT [ "/plum/init.sh" ]
 
 EXPOSE 1099
