@@ -13,7 +13,9 @@ public class Peer implements MessageIF {
     private long version;
     private ArrayList<String> addressBook;
 
-    public Peer() {}
+    public Peer() {
+        this.addressBook = new ArrayList<String>();
+    }
 
     @Override
     public String sayHello() throws RemoteException {
