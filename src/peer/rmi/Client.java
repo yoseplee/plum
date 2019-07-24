@@ -10,10 +10,21 @@ public class Client {
     private Registry registry;
     private MessageIF stub;
     private String host;
+    private int port;
 
-    public Client() {}
+    //constructor overloading
+    public Client() {
+        this("127.0.0.1", 1099);
+        this.host = "127.0.0.1";
+        this.port = 1099;
+    }
     public Client(String host) {
+        this(host, 1099);
+    }
+
+    public Client(String host, int port) {
         this.host = host;
+        this.port = port;
     }
 
     public void connect(String host) {
