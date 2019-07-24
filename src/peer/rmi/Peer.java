@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Peer implements MessageIF {
 
     private long idx;
+    private long version;
     private ArrayList<String> addressBook;
 
     public Peer() {}
@@ -34,6 +35,36 @@ public class Peer implements MessageIF {
             System.err.println(e.getMessage());
         }
         return myip;
+    }
+
+    @Override
+    public String setAddressBook(ArrayList<String> addressBook) {
+        String message = "{success: true}";
+        this.addressBook = addressBook;
+        return message;
+    }
+
+    @Override
+    public String addAddress(String address) {
+        String message = "{success: true}";
+        this.addressBook.add(address);
+        return message;
+    }
+
+    @Override
+    public String printAllAddressBook() {
+        String message = "{";
+        message += "{success: true},";
+        message += "address: [";
+        int size = addressBook.size();
+        for(int i=0; i<size; i++) {
+            String address = addressBook.get(i);
+            message += address;
+            if(i+1 != size) message += ", ";
+        }
+        message += "]}";
+
+        return message;
     }
 
     public static void main(String args[]) {
