@@ -1,9 +1,10 @@
 package peer.rmi;
 
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Client {
 
@@ -15,7 +16,7 @@ public class Client {
     //constructor overloading
     public Client() {
         this("127.0.0.1", 1099);
-        this.host = "127.0.0.1";
+        this.host = "127.0.0.1"; 
         this.port = 1099;
     }
     public Client(String host) {
@@ -25,113 +26,66 @@ public class Client {
     public Client(String host, int port) {
         this.host = host;
         this.port = port;
+    }   
+
+    @Override
+    public String toString() {
+        String result = "";
+        result += "======================\n";
+        result += "< Client >\n";
+        result += String.format("%-16s%-10s%-30s\n", host, port);
+        result += "======================\n";
+        return result;
     }
 
-    public void connect(String host) {
+    public void connect() {
         try {
             registry = LocateRegistry.getRegistry(host);
-            stub = (MessageIF) registry.lookup("peer");
+            
         } catch (Exception e) {
+            System.err.println("Connection Exception! Check out host address");
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
-        }        
+        }
+        try {
+            stub = (MessageIF) registry.lookup("peer");
+        } catch (AccessException e) {
+            System.err.println("Connection Exception! Check out access priv");
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            System.err.println("Connection Exception! Check out is remote available");
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        } catch (NotBoundException e) {
+            System.err.println("Connection Exception! Check out bound name is correct");
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+		}
+    }
+
+    //getters and setters
+    public void setRegistry(Registry registry) {
+        this.registry = registry;
+    }
+
+    public void setStub(MessageIF stub) {
+        this.stub = stub;
+    }
+
+    public Registry getRegistry() {
+        return this.registry;
     }
 
     public MessageIF getStub() {
         return this.stub;
     }
 
-    public static void help() {
-        System.out.println("Client Function List");
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "help", "print all the commands"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "connect", "connect to specific peer. type ip address(v4)"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "sayHello", "send say hello to connect peer"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "getIP", "get IP address from connected peer, and add it to client's local addressbook"));
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "address", "send a single address to connected peer so that it can add it to its addressbook"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "addressbook", "send a list of address to connected peer so that it can add it to its addressbook"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "print addressbook", "print all the addressess connected peer have"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "exit", "quit client"));;
+    public String getHost() {
+        return this.host;
     }
 
-    public static void main(String[] args) {
-
-        // String host = (args.length < 1) ? null : args[0];
-
-        Client client;
-        MessageIF stubFromClient = null;
-        Scanner scan = new Scanner(System.in);
-        ArrayList<String> addressBook = new ArrayList<String>();
-        System.out.println("===================");
-        System.out.println("WELCOME TO PLUM PEER!");
-        System.out.println("===================");
-        System.out.println("help command for listing up commands that client have");
-        while(true) {
-            System.out.print("&> ");
-            String command = "";
-            command = scan.nextLine();
-            if(command.equals("help")) {
-                help();
-            } else if(command.equals("connect")) {
-                System.out.print("Which host(v4)? &> ");
-                String host = scan.nextLine();
-                System.out.println("try to connect to host: " + host);
-                client = new Client(host);
-                client.connect(host);
-                stubFromClient = client.getStub();
-            } else if(command.equals("sayHello")) {
-                try {    
-                    String response = stubFromClient.sayHello();
-                    stubFromClient.sendMessage("Hello peer!");
-                    System.out.println("response: " + response);
-                } catch (Exception e) {
-                    System.err.println("Error! Did you connect to a peer?");
-                    System.err.println("Client exception: " + e.toString());
-                    e.printStackTrace();
-                }
-            } else if(command.equals("getIP")) {
-                try {    
-                    String response = stubFromClient.getIP();
-                    System.out.println("response: " + response);
-                    addressBook.add(response);
-                } catch (Exception e) {
-                    System.err.println("Error! Did you connect to a peer?");
-                    System.err.println("Client exception: " + e.toString());
-                    e.printStackTrace();
-                }
-            } else if(command.equals("address")) {
-                try {    
-                    String address = "";
-                    System.out.println("which address to add? &> ");
-                    address = scan.nextLine();
-                    String response = stubFromClient.addAddress(address);
-                    System.out.println("response: " + response);
-                } catch (Exception e) {
-                    System.err.println("Client exception: " + e.toString());
-                    e.printStackTrace();
-                }
-            } else if(command.equals("addressbook")) {
-                try {    
-                    System.out.println("addressbook send");
-                    String response = stubFromClient.setAddressBook(addressBook);
-                    System.out.println("response: " + response);
-                } catch (Exception e) {
-                    System.err.println("Client exception: " + e.toString());
-                    e.printStackTrace();
-                }
-            } else if(command.equals("print addressbook")) {
-                try {    
-                    System.out.println("addressbook of connected peer? &> ");
-                    String response = stubFromClient.printAllAddressBook();
-                    System.out.println("response: " + response);
-                } catch (Exception e) {
-                    System.err.println("Error! Did you connect to a peer?");
-                    System.err.println("Client exception: " + e.toString());
-                    e.printStackTrace();
-                }
-            } else if(command.equals("exit")) {
-                System.out.println("Bye");
-                break;
-            }
-        }
+    public int getPort() {
+        return this.port;
     }
 }
