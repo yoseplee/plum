@@ -12,9 +12,11 @@ public class Peer implements MessageIF {
     private long idx;
     private long version;
     private ArrayList<String> addressBook;
+    private ArrayList<String> mempool;
 
     public Peer() {
         this.addressBook = new ArrayList<String>();
+        this.mempool = new ArrayList<String>();
     }
 
     @Override
@@ -68,6 +70,58 @@ public class Peer implements MessageIF {
         message += "]}";
 
         return message;
+    }
+
+    @Override
+    public String addTransaction(String transaction) {
+        String message = "";
+        message += "{success: true}, ";
+
+        //conditions
+        //verify transaction
+        //if(verifyTransaction(message))
+        //duplication check
+        if(mempool.contains(transaction)) {
+            return "{success: false, desc: duplicated}";
+        }
+
+        //and then add this transaction to mempool
+        mempool.add(transaction);
+        gossip(transaction);
+
+        return message;
+    }
+
+    @Override
+    public String printAllMempool() {
+        String message = "{";
+        message += "{success: true},";
+        message += "transaction: [";
+        int size = mempool.size();
+        for(int i=0; i<size; i++) {
+            String transaction = mempool.get(i);
+            message += transaction;
+            if(i+1 != size) message += ", ";
+        }
+        message += "]}";
+
+        return message;
+    }
+
+    public void gossip(String gossipMessage) {
+        //make a list of client to gossip something
+        //basic thought is to fire and fotgot
+        ArrayList<Client> clientList = new ArrayList<Client>();
+        for(String host : addressBook) {
+            Client client = new Client(host);
+            client.connect();
+            clientList.add(client);
+        }
+
+        //may a client act as thread
+        for(Client tmpClient : clientList) {
+            tmpClient.addTransaction(gossipMessage);
+        }
     }
 
     public static void main(String args[]) {

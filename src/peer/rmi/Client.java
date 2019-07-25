@@ -7,7 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
-public class Client {
+public class Client implements Runnable {
 
     private Registry registry;
     private MessageIF stub;
@@ -30,6 +30,11 @@ public class Client {
         this.port = port;
         addressbook = new ArrayList<String>();
     }   
+
+    @Override
+    public void run() {
+
+    }
 
     //define remote call methods
     public String sayHello() {
@@ -93,6 +98,19 @@ public class Client {
             result = response;
         } catch (Exception e) {
             System.err.println("Error! Did you connect to a peer?");
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String addTransaction(String transaction) {
+        String result = "";
+        try {    
+            System.out.println("add transaction to connected peer");
+            String response = stub.addTransaction(transaction);
+            result = response;
+        } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
         }

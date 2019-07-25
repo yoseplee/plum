@@ -11,4 +11,6 @@ public interface MessageIF extends Remote {
     String setAddressBook(ArrayList<String> addressBook) throws RemoteException;
     String addAddress(String address) throws RemoteException;
     String printAllAddressBook() throws RemoteException;
+    String addTransaction(String message) throws RemoteException;
+    String printAllMempool() throws RemoteException;
 }
