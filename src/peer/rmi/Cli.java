@@ -23,7 +23,10 @@ public class Cli {
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "addAddress", "send a single address to connected peer so that it can add it to its addressbook"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "setAddressbook", "send a list of address to connected peer so that it can add it to its addressbook"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "printAddressbook", "print all the addressess connected peer have"));;
+        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "addTransaction", "add a transaction to peer and gossip"));;
+        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "printMempool", "print all the mempool of connected peer have"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "exit", "quit client"));;
+
     }
 
     public static void printAllClients(ArrayList<Client> clientList) {
@@ -128,6 +131,15 @@ public class Cli {
                                 break;
                             case "printAddressbook":
                                 response = currentClient.printAddressbook();
+                                break;
+                            case "addTransaction":
+                                String transaction = "";
+                                System.out.println("which transaction to add? &> ");
+                                transaction = scan.nextLine();
+                                response = currentClient.addTransaction(transaction);
+                                break;
+                            case "printMempool":
+                                response = currentClient.printMempool();
                                 break;
                             default:
                                 break;

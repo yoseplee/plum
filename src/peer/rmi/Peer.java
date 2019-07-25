@@ -93,7 +93,7 @@ public class Peer implements MessageIF {
     }
 
     @Override
-    public String printAllMempool() {
+    public String printMempool() {
         String message = "{";
         message += "{success: true},";
         message += "transaction: [";
@@ -119,7 +119,16 @@ public class Peer implements MessageIF {
         }
 
         //may a client act as thread
+        String host = "000.000.000.000";
+        try {
+            host = getIP();
+        } catch (RemoteException e) {
+            System.err.println("GET IP ERROR: " + e.toString());
+            e.printStackTrace();
+        }
+        System.out.println(String.format("%-10s%-5s%-2s%-5s%-2s%-30s", "GOSSIP:: ", "FROM", "-->", "TO", " | " , "gossipMessage"));
         for(Client tmpClient : clientList) {
+            System.out.println(String.format("%-10s%-5s%-2s%-5s%-2s%-30s", "GOSSIP:: ", host, "-->", tmpClient.getHost(), " | " , gossipMessage));
             tmpClient.addTransaction(gossipMessage);
         }
     }

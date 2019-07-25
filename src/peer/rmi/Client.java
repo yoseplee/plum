@@ -93,7 +93,7 @@ public class Client implements Runnable {
     public String printAddressbook() {
         String result = "";
         try {    
-            System.out.println("addressbook of connected peer");
+            System.out.println("addressbook of connected peer: " + this.host);
             String response = stub.printAllAddressBook();
             result = response;
         } catch (Exception e) {
@@ -107,10 +107,24 @@ public class Client implements Runnable {
     public String addTransaction(String transaction) {
         String result = "";
         try {    
-            System.out.println("add transaction to connected peer");
+            System.out.println("add transaction to connected peer: " + this.host);
             String response = stub.addTransaction(transaction);
             result = response;
         } catch (Exception e) {
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String printMempool() {
+        String result = "";
+        try {    
+            System.out.println("mempool of connected peer: " + this.host);
+            String response = stub.printMempool();
+            result = response;
+        } catch (Exception e) {
+            System.err.println("Error! Did you connect to a peer?");
             System.err.println("Client exception: " + e.toString());
             e.printStackTrace();
         }
