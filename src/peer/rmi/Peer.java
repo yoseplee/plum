@@ -48,6 +48,7 @@ public class Peer implements MessageIF {
 
     @Override
     public String addAddress(String address) {
+        //need to implement duplicated address before add
         String message = "{success: true}";
         this.addressBook.add(address);
         return message;

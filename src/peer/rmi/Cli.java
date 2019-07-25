@@ -34,10 +34,24 @@ public class Cli {
             return;
         }
         int i = 0;
+        System.out.println(String.format("%-5s%-16s%-10s", "idx", "|ip", "|port"));
         for(Client tmpClient : clientList) {
-            System.out.printf("%-5s%-16s%-10s%", "idx", "|ip", "|port\n");
-            System.out.printf("%-5s%-16s%-10s%-30s\n", ++i, tmpClient.getHost(), tmpClient.getPort());
+            System.out.println(String.format("%-5d%-16s%-10s", ++i, tmpClient.getHost(), tmpClient.getPort()));
         }
+    }
+
+    public static void welcomeCli() {
+        System.out.println("===================");
+        System.out.println("WELCOME TO PLUM CLI!");
+        System.out.println("===================");
+        System.out.println("help command for listing up commands that client have");
+    }
+
+    public static void welcomePeer() {
+        System.out.println("*******************");
+        System.out.println("WELCOME TO PLUM PEER!");
+        System.out.println("*******************");
+        System.out.println("help command for listing up commands that client have");
     }
 
     public static void main(String[] args) {
@@ -49,10 +63,7 @@ public class Cli {
         // Client client;
         Scanner scan = new Scanner(System.in);
         ArrayList<String> addressbook = new ArrayList<String>();
-        System.out.println("===================");
-        System.out.println("WELCOME TO PLUM PEER!");
-        System.out.println("===================");
-        System.out.println("help command for listing up commands that client have");
+        welcomeCli();
         while(true) {
             System.out.print("&> ");
             String command = "";
@@ -66,8 +77,10 @@ public class Cli {
                     String host = scan.nextLine();
                     System.out.println("try to connect to host: " + host);
                     Client client = new Client(host);
-                    if(!client.connect()) {
+                    if(client.connect()) {
                         addressbook.add(client.getHost());
+                        clientList.add(client);
+                        System.out.println("connected to " + host);
                     } else {
                         System.err.println("connect error!");
                     }
@@ -78,22 +91,25 @@ public class Cli {
                 case "use":
                     int clientIdx = -1;
                     printAllClients(clientList);
-                    System.out.println("which client to use? (idx) &> ");
+                    System.out.print("which client to use? (idx) &> ");
                     clientIdx = Integer.parseInt(scan.nextLine());
                     //check bound
                     if(clientIdx > clientList.size() || clientIdx < 0) {
                         System.err.println("client idx out of bound!");
                         continue;
                     }
-                    currentClient = clientList.get(clientIdx);
+                    currentClient = clientList.get(clientIdx-1);
                     System.out.println(currentClient);
-
-                    System.out.print("Which message to send? &> ");
-                    String message = scan.nextLine();
-                    String response = "";
-                    if(!message.isEmpty()) {
+                    welcomePeer();
+                    while(true) {
+                        String response = "";
+                        System.out.printf("%10s | &> ", currentClient.getHost());
+                        String message = scan.nextLine();
                         //send RMI call
                         switch(message) {
+                            case "help":
+                                clientHelp();
+                                break;
                             case "sayHello":
                                 response = currentClient.sayHello();
                                 break;
@@ -118,9 +134,14 @@ public class Cli {
                             default:
                                 break;
                         }
+                        if(message.equals("exit")) {
+                            System.out.println("..back to CLI");
+                            break;
+                        }
+                        //print
+                        if(!response.isEmpty()) System.out.println("response: " + response);
                     }
-                    //print
-                    System.out.println("response: " + response);
+                    welcomeCli();
                     break;
                 case "exit":
                     System.out.println("Bye");

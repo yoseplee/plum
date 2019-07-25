@@ -6,7 +6,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Client {
 
@@ -105,7 +104,7 @@ public class Client {
         String result = "";
         result += "======================\n";
         result += "< Client >\n";
-        result += String.format("%-16s%-10s%-30s\n", host, port);
+        result += String.format("%-16s%-10s\n", host, port);
         result += "======================\n";
         return result;
     }
