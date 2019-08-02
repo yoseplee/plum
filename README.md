@@ -1,8 +1,8 @@
 # PLUM
-a simple blockchain based on java.
+a simple blockchain based on gRPC
 
-prerequisite:
+prerequsite:
 * Docker
-* RMI
-* P2P network
-* Blockchain Concepts
+* gRPC
+* P2P Protocols
+* Blockchain concepts
