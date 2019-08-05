@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "plum";
+option java_outer_classname = "plumNetwork";
+option objc_class_prefix = "PN";
+
+package plum;
+
+// service definition for test ... say Hello
+service Test {
+    rpc SayHello(HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}
