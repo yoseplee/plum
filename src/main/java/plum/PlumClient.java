@@ -13,9 +13,7 @@ public class PlumClient {
 	private final TestGrpc.TestBlockingStub blockingStub;
 
 	public PlumClient(String host, int port) {
-		this(ManagedChannelBuilder.forAddress(host, port)
-			.usePlaintext()
-			.build());
+		this(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build());
 	}
 
 	PlumClient(ManagedChannel channel) {
@@ -35,7 +33,7 @@ public class PlumClient {
 			response = blockingStub.sayHello(request);
 		} catch (StatusRuntimeException e) {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-      		return;
+			return;
 		}
 		logger.info("Greeting: " + response.getMessage());
 	}
