@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class PlumClient {
 	private static final Logger logger = Logger.getLogger(PlumClient.class.getName());
 	private final ManagedChannel channel;
-	private final TestGrpc.TestBlockingStub blockingStub;
+	private final PlumServiceGrpc.PlumServiceBlockingStub blockingStub;
 
 	public PlumClient(String host, int port) {
 		this(ManagedChannelBuilder.forAddress(host, port).usePlaintext().build());
@@ -18,13 +18,14 @@ public class PlumClient {
 
 	PlumClient(ManagedChannel channel) {
 		this.channel = channel;
-		blockingStub = TestGrpc.newBlockingStub(channel);
+		blockingStub = PlumServiceGrpc.newBlockingStub(channel);
 	}
 
 	public void shutdown() throws InterruptedException {
 		channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
 	}
 
+	/*
 	public void sayHello(String name) {
 		logger.info("Will try to greet " + name + " ...");
 		HelloRequest request = HelloRequest.newBuilder().setName(name).build();
@@ -37,12 +38,25 @@ public class PlumClient {
 		}
 		logger.info("Greeting: " + response.getMessage());
 	}
+	*/
+
+	public void getIP() {
+		logger.info("Will try to get IP from gRPC server");
+		Empty req = Empty.newBuilder().build();
+		IPAddress res;
+		try {
+			res = blockingStub.getIP(req);
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+			return;
+		}
+		logger.info("IP: " + res.getAddress());
+	}
 
 	public static void main(String[] args) throws Exception {
 		PlumClient client = new PlumClient("localhost", 50051);
 		try {
-			String user = "world";
-			client.sayHello(user);
+			client.getIP();
 		} finally {
 			client.shutdown();
 		}
