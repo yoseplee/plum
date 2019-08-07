@@ -1,11 +1,15 @@
 package plum;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import io.grpc.stub.StreamObserver;
 import java.net.InetAddress;
 
 public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
-    PlumPeer thisPeer;
-    
+    private static final Logger logger = Logger.getLogger(PlumServiceImpl.class.getName());
+
+    private PlumPeer thisPeer;
+
     public PlumServiceImpl(PlumPeer thisPeer) {
         this.thisPeer = thisPeer;
     }
@@ -34,6 +38,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
         // get address from client request
         String addressToSet = req.getAddress();
+        logger.info("set Address: " + addressToSet);
 
         // add address to peer's address book
         thisPeer.getAddressBook().add(addressToSet);
@@ -42,6 +47,29 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         Empty res = Empty.newBuilder().build();
         responseObserver.onNext(res);
         responseObserver.onCompleted();
-        
+    }
+
+    @Override
+    public StreamObserver<IPAddress> setAddressBook(final StreamObserver<Empty> responseObserver) {
+        return new StreamObserver<IPAddress>() {
+            @Override
+            public void onNext(IPAddress address) {
+                String addressToSet = address.getAddress();
+                logger.info("set Address: " + addressToSet);
+                thisPeer.getAddressBook().add(addressToSet);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                logger.log(Level.WARNING, "setAddresssBook cancelled");
+            }
+
+            @Override
+            public void onCompleted() {
+                Empty empty = Empty.newBuilder().build();
+                responseObserver.onNext(empty);
+                responseObserver.onCompleted();
+            }
+        };
     }
 }

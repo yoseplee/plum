@@ -6,6 +6,9 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import plum.PlumServiceGrpc.PlumServiceBlockingStub;
 import plum.PlumServiceGrpc.PlumServiceStub;
+
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,12 +62,62 @@ public class PlumClient {
 		logger.info("IP: " + res.getAddress());
 	}
 
+	public void addAddress() {}
+
+	public void setAddressBook(ArrayList<String> addressBook) {
+		logger.info("Setting addressbook into connected peer");
+		final CountDownLatch latch = new CountDownLatch(1);
+		StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
+			@Override
+			public void onNext(Empty empty) {
+				// do nothing
+			}
+
+			@Override
+			public void onError(Throwable t) {
+
+			}
+
+			@Override
+			public void onCompleted() {
+				logger.info("finish setAddressBook");
+				latch.countDown();
+			}
+		};
+
+		StreamObserver<IPAddress> requestObserver = asyncStub.setAddressBook(responseObserver);
+		try {
+			//loop
+			for(String address : addressBook) {
+				IPAddress addressToSet = IPAddress.newBuilder().setAddress(address).build();
+				requestObserver.onNext(addressToSet);
+			}
+		} catch (RuntimeException e) {
+			requestObserver.onError(e);
+			throw e;
+		}
+
+		requestObserver.onCompleted();
+
+		/*
+		if(!latch.await(1, TimeUnit.MINUTES)) {
+			logger.warning("setAddressBook can not finish within 1 minutes");
+		}
+		*/
+	}
+
 	// entry point of client
 	public static void main(String[] args) throws Exception {
 		PlumClient client = new PlumClient("localhost", 50051);
 		try {
 			client.sayHello("HI");
 			client.getIP();
+			ArrayList<String> tempAddressBook = new ArrayList<String>();
+			tempAddressBook.add("localhost");
+			tempAddressBook.add("192.168.0.33");
+			tempAddressBook.add("192.168.0.35");
+			tempAddressBook.add("192.168.0.22");
+			client.setAddressBook(tempAddressBook);
 		} finally {
 			client.shutdown();
 		}
