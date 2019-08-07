@@ -3,6 +3,8 @@ package plum;
 import io.grpc.stub.StreamObserver;
 import java.net.InetAddress;
 
+import com.google.protobuf.Empty;
+
 public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     PlumPeer thisPeer;
     
@@ -28,5 +30,20 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
             System.err.println(e.getMessage());
         }
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
+        // get address from client request
+        String addressToSet = req.getAddress();
+
+        // add address to peer's address book
+        thisPeer.getAddressBook().add(addressToSet);
+
+        // response to client
+        Empty res = Empty.newBuilder().build();
+        responseObserver.onNext(res);
+        responseObserver.onCompleted();
+        
     }
 }

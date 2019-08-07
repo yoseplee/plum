@@ -3,6 +3,7 @@ package plum;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 import plum.PlumServiceGrpc.PlumServiceBlockingStub;
 import plum.PlumServiceGrpc.PlumServiceStub;
 import java.util.concurrent.TimeUnit;
