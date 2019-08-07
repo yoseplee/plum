@@ -64,7 +64,7 @@ public class PlumClient {
 
 	public void addAddress() {}
 
-	public void setAddressBook(ArrayList<String> addressBook) {
+	public void setAddressBook(ArrayList<String> addressBook) throws InterruptedException {
 		logger.info("Setting addressbook into connected peer");
 		final CountDownLatch latch = new CountDownLatch(1);
 		StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
@@ -99,11 +99,9 @@ public class PlumClient {
 
 		requestObserver.onCompleted();
 
-		/*
 		if(!latch.await(1, TimeUnit.MINUTES)) {
 			logger.warning("setAddressBook can not finish within 1 minutes");
 		}
-		*/
 	}
 
 	// entry point of client
