@@ -3,8 +3,6 @@ package plum;
 import io.grpc.stub.StreamObserver;
 import java.net.InetAddress;
 
-import com.google.protobuf.Empty;
-
 public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     PlumPeer thisPeer;
     
