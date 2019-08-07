@@ -4,7 +4,6 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.logging.Logger;
 
 public class PlumPeer {
@@ -15,7 +14,7 @@ public class PlumPeer {
 
 	private void start() throws IOException {
 		int port = 50051;
-		server = ServerBuilder.forPort(port).addService(new PlumServiceImpl()).build().start();
+		server = ServerBuilder.forPort(port).addService(new PlumServiceImpl(this)).build().start();
 		logger.info("Server started, listening on " + port);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.err.println("*** shutting down gRPC server since JVM is shutting down");
@@ -53,27 +52,5 @@ public class PlumPeer {
 		
 		new Thread(serverTask).start();
 
-	}
-
-	static class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
-		@Override
-		public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
-			HelloReply reply = HelloReply.newBuilder().setMessage("Hello!").build();
-			responseObserver.onNext(reply);
-			responseObserver.onCompleted();
-		}
-	
-		@Override
-		public void getIP(Empty req, StreamObserver<IPAddress> responseObserver) {
-			try {
-				InetAddress local = InetAddress.getLocalHost();
-				String myIp = local.getHostAddress().toString();
-				IPAddress address = IPAddress.newBuilder().setAddress(myIp).build();
-				responseObserver.onNext(address);
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-			}
-			responseObserver.onCompleted();
-		}
 	}
 }
