@@ -9,11 +9,12 @@ import java.util.ArrayList;
 
 public class PlumPeer {
 	private static final Logger logger = Logger.getLogger(PlumPeer.class.getName());
+	private final Server server;
+	private final int port;
+	private final String host;
 	private ArrayList<String> addressBook;
-	private Server server;
-	private int port;
-	private String host;
 
+	// initializer suite
 	public PlumPeer() {
 		this("localhost", 50051);
 	}
@@ -30,8 +31,6 @@ public class PlumPeer {
 	}
 
 	private void start() throws IOException {
-		// int port = 50051;
-		// server = ServerBuilder.forPort(port).addService(new PlumServiceImpl(this)).build().start();
 		server.start();
 		logger.info("Server started, listening on " + port);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -41,6 +40,7 @@ public class PlumPeer {
 		}));
 	}
 
+	// server related features
 	private void stop() {
 		if (server != null)
 			server.shutdown();
@@ -52,6 +52,20 @@ public class PlumPeer {
 		}
 	}
 
+	// getters and setters
+	public int getPort() {
+		return this.port;
+	}
+
+	public String getHost() {
+		return this.host;
+	}
+
+	public ArrayList<String> getAddressBook() {
+		return this.addressBook;
+	}
+
+	// entry point of PlumPeer
 	public static void main(String[] args) {
 
 		// run server on a thread. start and forgot
@@ -67,8 +81,6 @@ public class PlumPeer {
 				e.printStackTrace();
 			}
 		};
-		
 		new Thread(serverTask).start();
-
 	}
 }
