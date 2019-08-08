@@ -2,6 +2,7 @@ package plum;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import plum.PlumServiceGrpc.PlumServiceBlockingStub;
@@ -87,7 +88,8 @@ public class PlumClient {
 
 			@Override
 			public void onError(Throwable t) {
-
+				logger.log(Level.WARNING, "RPC failed: {0}", Status.fromThrowable(t));
+				latch.countDown();
 			}
 
 			@Override
