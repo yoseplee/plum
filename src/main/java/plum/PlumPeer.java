@@ -66,6 +66,10 @@ public class PlumPeer {
 		return this.addressBook;
 	}
 
+	public ArrayList<Transaction> getMemPool() {
+		return this.memPool;
+	}
+
 	// entry point of PlumPeer
 	public static void main(String[] args) {
 

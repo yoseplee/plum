@@ -7,7 +7,6 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import plum.PlumServiceGrpc.PlumServiceBlockingStub;
 import plum.PlumServiceGrpc.PlumServiceStub;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
@@ -136,6 +135,35 @@ public class PlumClient {
 		return addressBook;
 	}
 
+	public void addTransaction(Transaction transaction) {
+		logger.info("add transaction to connected peer");
+		TransactionResponse res;
+		try {
+			res = blockingStub.addTransaction(transaction);
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+			return;
+		}
+		logger.info("transaction add done");
+	}
+
+	public ArrayList<Transaction> getMemPool() {
+		ArrayList<Transaction> memPool = new ArrayList<Transaction>();
+		Empty req = Empty.newBuilder().build();
+
+		Iterator<Transaction> transactions;
+		try {
+			transactions = blockingStub.getMemPool(req);
+			for(int i = 1; transactions.hasNext(); ++i) {
+				Transaction tx = transactions.next();
+				memPool.add(tx);
+			}
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+		}
+		return memPool;
+	}
+
 	// entry point of client
 	public static void main(String[] args) throws Exception {
 		PlumClient client = new PlumClient("localhost", 50051);
@@ -165,6 +193,19 @@ public class PlumClient {
 			ArrayList<IPAddress> book = client.getAddressBook();
 			for(IPAddress temp : book) {
 				System.out.println("address:: " + temp.getAddress());
+			}
+
+			System.out.println("Setting transaction into peer");
+			client.addTransaction(Transaction.newBuilder().setTransaction("hello").build());
+			client.addTransaction(Transaction.newBuilder().setTransaction("world").build());
+			client.addTransaction(Transaction.newBuilder().setTransaction("this").build());
+			client.addTransaction(Transaction.newBuilder().setTransaction("is").build());
+			client.addTransaction(Transaction.newBuilder().setTransaction("yosep").build());
+
+			System.out.println("Getting transaction from peer");
+			ArrayList<Transaction> memPool = client.getMemPool();
+			for(Transaction temp : memPool) {
+				System.out.println("transaction from peer mempool: " + temp.getTransaction());
 			}
 		} finally {
 			client.shutdown();

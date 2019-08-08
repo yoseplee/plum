@@ -1,6 +1,8 @@
 package plum;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import io.grpc.stub.StreamObserver;
@@ -8,6 +10,7 @@ import java.net.InetAddress;
 
 public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     private static final Logger logger = Logger.getLogger(PlumServiceImpl.class.getName());
+    private final int GOSSIPBOUND = 3;
 
     private PlumPeer thisPeer;
 
@@ -15,6 +18,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         this.thisPeer = thisPeer;
     }
 
+    // is alive?
     @Override
     public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
         HelloReply reply = HelloReply.newBuilder().setMessage("Hello!").build();
@@ -22,6 +26,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    // networking
     @Override
     public void getIP(Empty req, StreamObserver<IPAddress> responseObserver) {
         try {
@@ -35,6 +40,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    // address which peer have related features
     @Override
     public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
         // get address from client request
@@ -100,5 +106,57 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
             responseObserver.onNext(address);
         }
         responseObserver.onCompleted();
+    }
+
+    // simple transaction and gossip
+    @Override
+    public void addTransaction(Transaction req, StreamObserver<TransactionResponse> responseObserver) {
+        ArrayList<Transaction> thisPeerMemPool = thisPeer.getMemPool();
+        TransactionResponse res = TransactionResponse.newBuilder().setSuccess("true").build();
+
+        // step1: verify transaction
+        // if(!verify()) return; // do nothing
+
+        // step2: duplication check
+        if(!thisPeerMemPool.contains(req)) {
+            // step3: add this transaction(req) into mempool
+            thisPeerMemPool.add(req);
+            // step4: gossip this transaction
+            gossip(req);
+            responseObserver.onNext(res);
+            responseObserver.onCompleted();
+        }
+        // is duplicated. do nothing
+        return;
+    }
+
+    @Override
+    public void getMemPool(Empty req, StreamObserver<Transaction> responseObserver) {
+        ArrayList<Transaction> memPool = thisPeer.getMemPool();
+        for(Transaction transaction : memPool) {
+            responseObserver.onNext(transaction);
+        }
+        responseObserver.onCompleted();
+    }
+
+    public void gossip(Transaction transaction) {
+        ArrayList<IPAddress> addressBook = thisPeer.getAddressBook();
+
+        // randomly select from addressBook
+        Random random = new Random();
+        for(int i = 0; i < GOSSIPBOUND; ++i) {
+            int rndIdx = random.nextInt(addressBook.size());
+            IPAddress clientAddress = addressBook.get(rndIdx);
+            
+            //send to that client in thread(gossip: fire and forget)
+            new Thread(() -> {
+                try {
+                    PlumClient client = new PlumClient(clientAddress.getAddress(), 50051);    
+                    client.addTransaction(transaction);
+                } catch (Exception e) {
+                    System.err.println("Gossip Error: " + e.getMessage());
+                }
+            });
+        }        
     }
 }
