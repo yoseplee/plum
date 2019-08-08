@@ -26,9 +26,7 @@ service PlumService {
     rpc getIP(Empty) returns (IPAddress) {}
     rpc addAddress(IPAddress) returns (Empty) {}
     rpc setAddressBook(stream IPAddress) returns (Empty) {}
-    /*
     rpc getAddressBook(Empty) returns (stream IPAddress) {}
-    */
 }
 
 message Empty {

@@ -8,6 +8,7 @@ import plum.PlumServiceGrpc.PlumServiceBlockingStub;
 import plum.PlumServiceGrpc.PlumServiceStub;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -35,7 +36,7 @@ public class PlumClient {
 		channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
 	}
 
-	// client-side rpc call implementation	
+	// client-side rpc call implementation
 	public void sayHello(String name) {
 		logger.info("Will try to greet " + name + " ...");
 		HelloRequest request = HelloRequest.newBuilder().setName(name).build();
@@ -62,7 +63,18 @@ public class PlumClient {
 		logger.info("IP: " + res.getAddress());
 	}
 
-	public void addAddress() {}
+	public void addAddress(String address) {
+		logger.info("setting a address into connected peer");
+		IPAddress req = IPAddress.newBuilder().setAddress(address).build();
+		Empty res;
+		try {
+			res = blockingStub.addAddress(req);
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+			return;
+		}
+		logger.info("address set done");
+	}
 
 	public void setAddressBook(ArrayList<String> addressBook) throws InterruptedException {
 		logger.info("Setting addressbook into connected peer");
@@ -87,8 +99,8 @@ public class PlumClient {
 
 		StreamObserver<IPAddress> requestObserver = asyncStub.setAddressBook(responseObserver);
 		try {
-			//loop
-			for(String address : addressBook) {
+			// loop
+			for (String address : addressBook) {
 				IPAddress addressToSet = IPAddress.newBuilder().setAddress(address).build();
 				requestObserver.onNext(addressToSet);
 			}
@@ -97,11 +109,30 @@ public class PlumClient {
 			throw e;
 		}
 
+		// notify completed
 		requestObserver.onCompleted();
 
-		if(!latch.await(1, TimeUnit.MINUTES)) {
+		if (!latch.await(1, TimeUnit.MINUTES)) {
 			logger.warning("setAddressBook can not finish within 1 minutes");
 		}
+	}
+
+	public ArrayList<String> getAddressBook() {
+		ArrayList<String> addressBook = new ArrayList<String>();
+		Empty req = Empty.newBuilder().build();
+
+		Iterator<IPAddress> addresses;
+		try {
+			addresses = blockingStub.getAddressBook(req);
+			for (int i = 1; addresses.hasNext(); i++) {
+				IPAddress addressToSet = addresses.next();
+				logger.info("[Client] Setting address: " + addressToSet);
+				addressBook.add(addressToSet.getAddress());
+			}
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+		}
+		return addressBook;
 	}
 
 	// entry point of client
@@ -110,12 +141,21 @@ public class PlumClient {
 		try {
 			client.sayHello("HI");
 			client.getIP();
+
+			client.addAddress(("192.168.33.2"));
+
 			ArrayList<String> tempAddressBook = new ArrayList<String>();
 			tempAddressBook.add("localhost");
 			tempAddressBook.add("192.168.0.33");
 			tempAddressBook.add("192.168.0.35");
 			tempAddressBook.add("192.168.0.22");
 			client.setAddressBook(tempAddressBook);
+
+			System.out.println("Getting addressbook from peer");
+			ArrayList<String> book = client.getAddressBook();
+			for(String temp : book) {
+				System.out.println("address:: " + temp);
+			}
 		} finally {
 			client.shutdown();
 		}

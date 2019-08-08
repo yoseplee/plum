@@ -1,5 +1,6 @@
 package plum;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import io.grpc.stub.StreamObserver;
@@ -71,5 +72,15 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
                 responseObserver.onCompleted();
             }
         };
+    }
+
+    @Override
+    public void getAddressBook(Empty req, StreamObserver<IPAddress> responseObserver) {
+        ArrayList<String> addressBook = thisPeer.getAddressBook();
+        for(String address : addressBook) {
+            IPAddress addressToSend = IPAddress.newBuilder().setAddress(address).build();
+            responseObserver.onNext(addressToSend);
+        }
+        responseObserver.onCompleted();
     }
 }
