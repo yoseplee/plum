@@ -42,7 +42,15 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         logger.info("set Address: " + addressToSet);
 
         // add address to peer's address book
-        thisPeer.getAddressBook().add(addressToSet);
+        // get addressbook from connected peer
+        ArrayList<String> peerAddressBook = thisPeer.getAddressBook();
+
+        // check duplication
+        if(!peerAddressBook.contains(addressToSet)) {
+            thisPeer.getAddressBook().add(addressToSet);    
+        } else {
+            logger.log(Level.INFO, "address duplicated. do nothing");
+        }
 
         // response to client
         Empty res = Empty.newBuilder().build();
@@ -55,9 +63,20 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         return new StreamObserver<IPAddress>() {
             @Override
             public void onNext(IPAddress address) {
+                // get address from client request
                 String addressToSet = address.getAddress();
                 logger.info("set Address: " + addressToSet);
-                thisPeer.getAddressBook().add(addressToSet);
+
+                // get addressbook from connected peer
+                ArrayList<String> peerAddressBook = thisPeer.getAddressBook();
+
+                // check duplication
+                if(!peerAddressBook.contains(addressToSet)) {
+                    thisPeer.getAddressBook().add(addressToSet);    
+                } else {
+                    // do nothing
+                    logger.log(Level.INFO, "address duplicated. do nothing");
+                }
             }
 
             @Override

@@ -145,11 +145,20 @@ public class PlumClient {
 			client.getIP();
 
 			client.addAddress(("192.168.33.2"));
+			client.addAddress(("192.168.33.2"));
+			client.addAddress(("192.168.33.2"));
+			client.addAddress(("192.168.33.2"));
+			client.addAddress(("192.168.33.2"));
 
 			ArrayList<String> tempAddressBook = new ArrayList<String>();
 			tempAddressBook.add("localhost");
 			tempAddressBook.add("192.168.0.33");
+			tempAddressBook.add("192.168.0.33");
 			tempAddressBook.add("192.168.0.35");
+			tempAddressBook.add("192.168.0.35");
+			tempAddressBook.add("192.168.0.35");
+			tempAddressBook.add("192.168.0.35");
+			tempAddressBook.add("192.168.0.22");
 			tempAddressBook.add("192.168.0.22");
 			client.setAddressBook(tempAddressBook);
 
