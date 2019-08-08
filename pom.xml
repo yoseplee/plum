@@ -124,7 +124,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
-        <configuration>
+        <fileName>
           <!-- <fileName>PlumPeer</fileName> -->
           <outputDirectory>./dockerfile/</outputDirectory>
           <archive>
@@ -136,7 +136,7 @@
               <!-- <packageName>plum</packageName> -->
             </manifest>
           </archive>
-        </configuration>
+        </fileName>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
