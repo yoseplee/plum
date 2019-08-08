@@ -12,6 +12,24 @@ service Test {
     rpc SayHello(HelloRequest) returns (HelloReply) {}
 }
 
+// service for networking
+service PlumService {
+    // is alive?
+    rpc sayHello(HelloRequest) returns (HelloReply) {}
+
+    // networking
+    rpc getIP(Empty) returns (IPAddress) {}
+
+    // address which peer have related features
+    rpc addAddress(IPAddress) returns (Empty) {}
+    rpc setAddressBook(stream IPAddress) returns (Empty) {}
+    rpc getAddressBook(Empty) returns (stream IPAddress) {}
+
+    // simple transaction and gossip
+    rpc addTransaction(Transaction) returns (TransactionResponse) {}
+}
+
+// is alive?
 message HelloRequest {
     string name = 1;
 }
@@ -20,19 +38,23 @@ message HelloReply {
     string message = 1;
 }
 
-// service for networking
-service PlumService {
-    rpc sayHello(HelloRequest) returns (HelloReply) {}
-    rpc getIP(Empty) returns (IPAddress) {}
-    rpc addAddress(IPAddress) returns (Empty) {}
-    rpc setAddressBook(stream IPAddress) returns (Empty) {}
-    rpc getAddressBook(Empty) returns (stream IPAddress) {}
-}
-
+// networking
+// possibly chane message Empty to CommonResponse
 message Empty {
 
 }
 
 message IPAddress {
     string address = 1;
+}
+
+// simple transaction and gossip
+message Transaction {
+    int64 idx = 1; // for test(tracable). may transaction overflow
+    string transaction = 2;
+    int64 time = 3;
+}
+
+message TransactionResponse {
+    string success = 1;
 }
