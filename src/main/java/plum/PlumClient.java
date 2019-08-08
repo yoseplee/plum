@@ -77,7 +77,7 @@ public class PlumClient {
 		logger.info("address set done");
 	}
 
-	public void setAddressBook(ArrayList<String> addressBook) throws InterruptedException {
+	public void setAddressBook(ArrayList<IPAddress> addressBook) throws InterruptedException {
 		logger.info("Setting addressbook into connected peer");
 		final CountDownLatch latch = new CountDownLatch(1);
 		StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
@@ -102,9 +102,8 @@ public class PlumClient {
 		StreamObserver<IPAddress> requestObserver = asyncStub.setAddressBook(responseObserver);
 		try {
 			// loop
-			for (String address : addressBook) {
-				IPAddress addressToSet = IPAddress.newBuilder().setAddress(address).build();
-				requestObserver.onNext(addressToSet);
+			for (IPAddress address : addressBook) {
+				requestObserver.onNext(address);
 			}
 		} catch (RuntimeException e) {
 			requestObserver.onError(e);
@@ -119,8 +118,8 @@ public class PlumClient {
 		}
 	}
 
-	public ArrayList<String> getAddressBook() {
-		ArrayList<String> addressBook = new ArrayList<String>();
+	public ArrayList<IPAddress> getAddressBook() {
+		ArrayList<IPAddress> addressBook = new ArrayList<IPAddress>();
 		Empty req = Empty.newBuilder().build();
 
 		Iterator<IPAddress> addresses;
@@ -129,7 +128,7 @@ public class PlumClient {
 			for (int i = 1; addresses.hasNext(); i++) {
 				IPAddress addressToSet = addresses.next();
 				logger.info("[Client] Setting address: " + addressToSet);
-				addressBook.add(addressToSet.getAddress());
+				addressBook.add(addressToSet);
 			}
 		} catch (StatusRuntimeException e) {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
@@ -150,22 +149,22 @@ public class PlumClient {
 			client.addAddress(("192.168.33.2"));
 			client.addAddress(("192.168.33.2"));
 
-			ArrayList<String> tempAddressBook = new ArrayList<String>();
-			tempAddressBook.add("localhost");
-			tempAddressBook.add("192.168.0.33");
-			tempAddressBook.add("192.168.0.33");
-			tempAddressBook.add("192.168.0.35");
-			tempAddressBook.add("192.168.0.35");
-			tempAddressBook.add("192.168.0.35");
-			tempAddressBook.add("192.168.0.35");
-			tempAddressBook.add("192.168.0.22");
-			tempAddressBook.add("192.168.0.22");
+			ArrayList<IPAddress> tempAddressBook = new ArrayList<IPAddress>();
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("localhost").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.33").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.33").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.22").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.22").build());
 			client.setAddressBook(tempAddressBook);
 
 			System.out.println("Getting addressbook from peer");
-			ArrayList<String> book = client.getAddressBook();
-			for(String temp : book) {
-				System.out.println("address:: " + temp);
+			ArrayList<IPAddress> book = client.getAddressBook();
+			for(IPAddress temp : book) {
+				System.out.println("address:: " + temp.getAddress());
 			}
 		} finally {
 			client.shutdown();

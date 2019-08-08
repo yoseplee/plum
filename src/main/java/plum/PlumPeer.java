@@ -11,7 +11,8 @@ public class PlumPeer {
 	private final Server server;
 	private final int port;
 	private final String host;
-	private ArrayList<String> addressBook;
+	private ArrayList<IPAddress> addressBook;
+	private ArrayList<Transaction> memPool;
 
 	// initializer suite
 	public PlumPeer() {
@@ -25,7 +26,8 @@ public class PlumPeer {
 	public PlumPeer(String host, int port) {
 		this.host = host;
 		this.port = port;
-		addressBook = new ArrayList<String>();
+		addressBook = new ArrayList<IPAddress>();
+		memPool = new ArrayList<Transaction>();
 		server = ServerBuilder.forPort(port).addService(new PlumServiceImpl(this)).build();
 	}
 
@@ -60,7 +62,7 @@ public class PlumPeer {
 		return this.host;
 	}
 
-	public ArrayList<String> getAddressBook() {
+	public ArrayList<IPAddress> getAddressBook() {
 		return this.addressBook;
 	}
 

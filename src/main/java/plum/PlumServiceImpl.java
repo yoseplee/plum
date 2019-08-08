@@ -38,12 +38,12 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     @Override
     public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
         // get address from client request
-        String addressToSet = req.getAddress();
-        logger.info("set Address: " + addressToSet);
+        IPAddress addressToSet = req;
+        logger.info("set Address: " + addressToSet.getAddress());
 
         // add address to peer's address book
         // get addressbook from connected peer
-        ArrayList<String> peerAddressBook = thisPeer.getAddressBook();
+        ArrayList<IPAddress> peerAddressBook = thisPeer.getAddressBook();
 
         // check duplication
         if(!peerAddressBook.contains(addressToSet)) {
@@ -64,11 +64,11 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
             @Override
             public void onNext(IPAddress address) {
                 // get address from client request
-                String addressToSet = address.getAddress();
-                logger.info("set Address: " + addressToSet);
+                IPAddress addressToSet = address;
+                logger.info("set Address: " + addressToSet.getAddress());
 
                 // get addressbook from connected peer
-                ArrayList<String> peerAddressBook = thisPeer.getAddressBook();
+                ArrayList<IPAddress> peerAddressBook = thisPeer.getAddressBook();
 
                 // check duplication
                 if(!peerAddressBook.contains(addressToSet)) {
@@ -95,10 +95,9 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
 
     @Override
     public void getAddressBook(Empty req, StreamObserver<IPAddress> responseObserver) {
-        ArrayList<String> addressBook = thisPeer.getAddressBook();
-        for(String address : addressBook) {
-            IPAddress addressToSend = IPAddress.newBuilder().setAddress(address).build();
-            responseObserver.onNext(addressToSend);
+        ArrayList<IPAddress> addressBook = thisPeer.getAddressBook();
+        for(IPAddress address : addressBook) {
+            responseObserver.onNext(address);
         }
         responseObserver.onCompleted();
     }
