@@ -47,6 +47,7 @@ message Empty {
 
 message IPAddress {
     string address = 1;
+    int32 port = 2;
 }
 
 // simple transaction and gossip

@@ -60,12 +60,12 @@ public class PlumClient {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
 			return;
 		}
-		logger.info("IP: " + res.getAddress());
+		logger.info("IP: " + res.getAddress() + ":" + res.getPort());
 	}
 
-	public void addAddress(String address) {
+	public void addAddress(String address, int port) {
 		logger.info("setting a address into connected peer");
-		IPAddress req = IPAddress.newBuilder().setAddress(address).build();
+		IPAddress req = IPAddress.newBuilder().setAddress(address).setPort(port).build();
 		Empty res;
 		try {
 			res = blockingStub.addAddress(req);
@@ -171,28 +171,28 @@ public class PlumClient {
 			client.sayHello("HI");
 			client.getIP();
 
-			client.addAddress(("192.168.33.2"));
-			client.addAddress(("192.168.33.2"));
-			client.addAddress(("192.168.33.2"));
-			client.addAddress(("192.168.33.2"));
-			client.addAddress(("192.168.33.2"));
+			client.addAddress("192.168.33.2", 50051);
+			client.addAddress("192.168.33.2", 50051);
+			client.addAddress("192.168.33.2", 50051);
+			client.addAddress("192.168.33.2", 50051);
+			client.addAddress("192.168.33.2", 50051);
 
 			ArrayList<IPAddress> tempAddressBook = new ArrayList<IPAddress>();
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("localhost").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.33").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.33").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.22").build());
-			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.22").build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("localhost").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.33").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.33").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.35").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.22").setPort(50051).build());
+			tempAddressBook.add(IPAddress.newBuilder().setAddress("192.168.0.22").setPort(50051).build());
 			client.setAddressBook(tempAddressBook);
 
 			System.out.println("Getting addressbook from peer");
 			ArrayList<IPAddress> book = client.getAddressBook();
 			for(IPAddress temp : book) {
-				System.out.println("address:: " + temp.getAddress());
+				System.out.println("address:: " + temp.getAddress() + ":" + temp.getPort());
 			}
 
 			System.out.println("Setting transaction into peer");

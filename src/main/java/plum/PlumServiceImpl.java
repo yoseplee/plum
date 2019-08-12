@@ -11,7 +11,7 @@ import java.net.InetAddress;
 public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     private static final Logger logger = Logger.getLogger(PlumServiceImpl.class.getName());
     private final int GOSSIPBOUND = 3;
-
+    
     private PlumPeer thisPeer;
 
     public PlumServiceImpl(PlumPeer thisPeer) {
@@ -32,7 +32,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         try {
             InetAddress local = InetAddress.getLocalHost();
             String myIp = local.getHostAddress().toString();
-            IPAddress address = IPAddress.newBuilder().setAddress(myIp).build();
+            IPAddress address = IPAddress.newBuilder().setAddress(myIp).setPort(thisPeer.getPort()).build();
             responseObserver.onNext(address);
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -45,7 +45,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
         // get address from client request
         IPAddress addressToSet = req;
-        logger.info("set Address: " + addressToSet.getAddress());
+        logger.info("set Address: " + addressToSet.getAddress() + ":" + addressToSet.getPort());
 
         // add address to peer's address book
         // get addressbook from connected peer
