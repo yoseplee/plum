@@ -42,7 +42,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
 
     // address which peer have related features
     @Override
-    public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
+    public void addAddress(IPAddress req, StreamObserver<CommonResponse> responseObserver) {
         // get address from client request
         IPAddress addressToSet = req;
         logger.info("set Address: " + addressToSet.getAddress() + ":" + addressToSet.getPort());
@@ -50,16 +50,19 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         // add address to peer's address book
         // get addressbook from connected peer
         ArrayList<IPAddress> peerAddressBook = thisPeer.getAddressBook();
+        CommonResponse res;
 
         // check duplication
         if(!peerAddressBook.contains(addressToSet)) {
-            thisPeer.getAddressBook().add(addressToSet);    
+            thisPeer.getAddressBook().add(addressToSet); 
+            res = CommonResponse.newBuilder().setSuccess(true).build();
         } else {
+            String errorMsg = "ERROR: DUPLICATED";
+            res = CommonResponse.newBuilder().setSuccess(false).setError(errorMsg).build();
             logger.log(Level.INFO, "address duplicated. do nothing");
         }
-
+        
         // response to client
-        Empty res = Empty.newBuilder().build();
         responseObserver.onNext(res);
         responseObserver.onCompleted();
     }

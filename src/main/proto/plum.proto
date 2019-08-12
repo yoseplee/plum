@@ -21,7 +21,7 @@ service PlumService {
     rpc getIP(Empty) returns (IPAddress) {}
 
     // address which peer have related features
-    rpc addAddress(IPAddress) returns (Empty) {}
+    rpc addAddress(IPAddress) returns (CommonResponse) {}
     rpc setAddressBook(stream IPAddress) returns (Empty) {}
     rpc getAddressBook(Empty) returns (stream IPAddress) {}
 
@@ -43,6 +43,15 @@ message HelloReply {
 // possibly chane message Empty to CommonResponse
 message Empty {
 
+}
+
+message CommonRequest {
+    string request = 1;
+}
+
+message CommonResponse {
+    bool success = 1;
+    string error = 2;
 }
 
 message IPAddress {

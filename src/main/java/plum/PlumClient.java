@@ -66,14 +66,17 @@ public class PlumClient {
 	public void addAddress(String address, int port) {
 		logger.info("setting a address into connected peer");
 		IPAddress req = IPAddress.newBuilder().setAddress(address).setPort(port).build();
-		Empty res;
+		CommonResponse res;
+		boolean isSuccess = false;
 		try {
 			res = blockingStub.addAddress(req);
+			isSuccess = res.getSuccess();
 		} catch (StatusRuntimeException e) {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
 			return;
 		}
-		logger.info("address set done");
+		
+		logger.info("address set done(" + isSuccess + ")");
 	}
 
 	public void setAddressBook(ArrayList<IPAddress> addressBook) throws InterruptedException {
