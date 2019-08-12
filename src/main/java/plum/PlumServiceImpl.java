@@ -61,14 +61,14 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
             res = CommonResponse.newBuilder().setSuccess(false).setError(errorMsg).build();
             logger.log(Level.INFO, "address duplicated. do nothing");
         }
-        
+
         // response to client
         responseObserver.onNext(res);
         responseObserver.onCompleted();
     }
 
     @Override
-    public StreamObserver<IPAddress> setAddressBook(final StreamObserver<Empty> responseObserver) {
+    public StreamObserver<IPAddress> setAddressBook(final StreamObserver<CommonResponse> responseObserver) {
         return new StreamObserver<IPAddress>() {
             @Override
             public void onNext(IPAddress address) {
@@ -95,8 +95,8 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
 
             @Override
             public void onCompleted() {
-                Empty empty = Empty.newBuilder().build();
-                responseObserver.onNext(empty);
+                CommonResponse res = CommonResponse.newBuilder().setSuccess(true).build();
+                responseObserver.onNext(res);
                 responseObserver.onCompleted();
             }
         };

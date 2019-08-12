@@ -82,10 +82,12 @@ public class PlumClient {
 	public void setAddressBook(ArrayList<IPAddress> addressBook) throws InterruptedException {
 		logger.info("Setting addressbook into connected peer");
 		final CountDownLatch latch = new CountDownLatch(1);
-		StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
+		StreamObserver<CommonResponse> responseObserver = new StreamObserver<CommonResponse>() {
+			boolean isSuccess = false;
 			@Override
-			public void onNext(Empty empty) {
-				// do nothing
+			public void onNext(CommonResponse res) {
+				// prints status
+				isSuccess = res.getSuccess();
 			}
 
 			@Override
@@ -96,7 +98,7 @@ public class PlumClient {
 
 			@Override
 			public void onCompleted() {
-				logger.info("finish setAddressBook");
+				logger.info("finish setAddressBook: " + isSuccess);
 				latch.countDown();
 			}
 		};
