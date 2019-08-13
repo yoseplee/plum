@@ -27,7 +27,7 @@ service PlumService {
 
     // simple transaction and gossip
     rpc addTransaction(Transaction) returns (TransactionResponse) {}
-    rpc getMemPool(Empty) returns (stream Transaction) {}
+    rpc getMemPool(CommonRequest) returns (stream Transaction) {}
 }
 
 // is alive?

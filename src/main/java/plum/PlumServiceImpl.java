@@ -134,7 +134,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     }
 
     @Override
-    public void getMemPool(Empty req, StreamObserver<Transaction> responseObserver) {
+    public void getMemPool(CommonRequest req, StreamObserver<Transaction> responseObserver) {
         ArrayList<Transaction> memPool = thisPeer.getMemPool();
         for(Transaction transaction : memPool) {
             responseObserver.onNext(transaction);

@@ -154,7 +154,7 @@ public class PlumClient {
 
 	public ArrayList<Transaction> getMemPool() {
 		ArrayList<Transaction> memPool = new ArrayList<Transaction>();
-		Empty req = Empty.newBuilder().build();
+		CommonRequest req = CommonRequest.newBuilder().build();
 
 		Iterator<Transaction> transactions;
 		try {
