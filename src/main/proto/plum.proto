@@ -40,11 +40,6 @@ message HelloReply {
 }
 
 // networking
-// possibly chane message Empty to CommonResponse
-message Empty {
-
-}
-
 message CommonRequest {
     string request = 1;
 }
