@@ -124,7 +124,7 @@ public class PlumClient {
 
 	public ArrayList<IPAddress> getAddressBook() {
 		ArrayList<IPAddress> addressBook = new ArrayList<IPAddress>();
-		Empty req = Empty.newBuilder().build();
+		CommonRequest req = CommonRequest.newBuilder().build();
 
 		Iterator<IPAddress> addresses;
 		try {

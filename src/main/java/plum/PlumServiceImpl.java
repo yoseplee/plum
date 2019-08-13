@@ -103,7 +103,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     }
 
     @Override
-    public void getAddressBook(Empty req, StreamObserver<IPAddress> responseObserver) {
+    public void getAddressBook(CommonRequest req, StreamObserver<IPAddress> responseObserver) {
         ArrayList<IPAddress> addressBook = thisPeer.getAddressBook();
         for(IPAddress address : addressBook) {
             responseObserver.onNext(address);

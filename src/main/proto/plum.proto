@@ -23,7 +23,7 @@ service PlumService {
     // address which peer have related features
     rpc addAddress(IPAddress) returns (CommonResponse) {}
     rpc setAddressBook(stream IPAddress) returns (CommonResponse) {}
-    rpc getAddressBook(Empty) returns (stream IPAddress) {}
+    rpc getAddressBook(CommonRequest) returns (stream IPAddress) {}
 
     // simple transaction and gossip
     rpc addTransaction(Transaction) returns (TransactionResponse) {}
