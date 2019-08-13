@@ -18,7 +18,7 @@ service PlumService {
     rpc sayHello(HelloRequest) returns (HelloReply) {}
 
     // networking
-    rpc getIP(Empty) returns (IPAddress) {}
+    rpc getIP(CommonRequest) returns (IPAddress) {}
 
     // address which peer have related features
     rpc addAddress(IPAddress) returns (CommonResponse) {}
@@ -28,6 +28,12 @@ service PlumService {
     // simple transaction and gossip
     rpc addTransaction(Transaction) returns (TransactionResponse) {}
     rpc getMemPool(CommonRequest) returns (stream Transaction) {}
+    
+    // unary block build method
+    rpc buildBlock(CommonRequest) returns (CommonResponse) {}
+
+    // consensus
+    rpc honeyBee(CommonRequest) returns (CommonResponse) {}
 }
 
 // is alive?
@@ -63,4 +69,26 @@ message Transaction {
 
 message TransactionResponse {
     string success = 1;
+}
+
+// block header
+message BlockHeader {
+    // idx type can be changed as its possibility of overflow. considering string type
+    // but int64 is sufficient considering limitations in this system 
+    // as its max value is 9223372036854775807
+    int64 idx = 1;
+    string maker = 2;
+    string merkleRoot = 3;
+    string prevBlockHash = 4;
+    
+    // actual data
+    BlockBody body = 5;
+
+}
+
+// block body based on merkle tree
+message BlockBody {
+    string root = 1;
+    // tree structure is JSON expression
+    string tree = 2;
 }
