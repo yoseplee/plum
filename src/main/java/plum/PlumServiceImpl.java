@@ -42,7 +42,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
 
     // address which peer have related features
     @Override
-    public void addAddress(IPAddress req, StreamObserver<Empty> responseObserver) {
+    public void addAddress(IPAddress req, StreamObserver<CommonResponse> responseObserver) {
         // get address from client request
         IPAddress addressToSet = req;
         logger.info("set Address: " + addressToSet.getAddress() + ":" + addressToSet.getPort());
@@ -50,22 +50,25 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         // add address to peer's address book
         // get addressbook from connected peer
         ArrayList<IPAddress> peerAddressBook = thisPeer.getAddressBook();
+        CommonResponse res;
 
         // check duplication
         if(!peerAddressBook.contains(addressToSet)) {
-            thisPeer.getAddressBook().add(addressToSet);    
+            thisPeer.getAddressBook().add(addressToSet); 
+            res = CommonResponse.newBuilder().setSuccess(true).build();
         } else {
+            String errorMsg = "ERROR: DUPLICATED";
+            res = CommonResponse.newBuilder().setSuccess(false).setError(errorMsg).build();
             logger.log(Level.INFO, "address duplicated. do nothing");
         }
 
         // response to client
-        Empty res = Empty.newBuilder().build();
         responseObserver.onNext(res);
         responseObserver.onCompleted();
     }
 
     @Override
-    public StreamObserver<IPAddress> setAddressBook(final StreamObserver<Empty> responseObserver) {
+    public StreamObserver<IPAddress> setAddressBook(final StreamObserver<CommonResponse> responseObserver) {
         return new StreamObserver<IPAddress>() {
             @Override
             public void onNext(IPAddress address) {
@@ -92,15 +95,15 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
 
             @Override
             public void onCompleted() {
-                Empty empty = Empty.newBuilder().build();
-                responseObserver.onNext(empty);
+                CommonResponse res = CommonResponse.newBuilder().setSuccess(true).build();
+                responseObserver.onNext(res);
                 responseObserver.onCompleted();
             }
         };
     }
 
     @Override
-    public void getAddressBook(Empty req, StreamObserver<IPAddress> responseObserver) {
+    public void getAddressBook(CommonRequest req, StreamObserver<IPAddress> responseObserver) {
         ArrayList<IPAddress> addressBook = thisPeer.getAddressBook();
         for(IPAddress address : addressBook) {
             responseObserver.onNext(address);
@@ -131,7 +134,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
     }
 
     @Override
-    public void getMemPool(Empty req, StreamObserver<Transaction> responseObserver) {
+    public void getMemPool(CommonRequest req, StreamObserver<Transaction> responseObserver) {
         ArrayList<Transaction> memPool = thisPeer.getMemPool();
         for(Transaction transaction : memPool) {
             responseObserver.onNext(transaction);

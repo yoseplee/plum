@@ -66,23 +66,28 @@ public class PlumClient {
 	public void addAddress(String address, int port) {
 		logger.info("setting a address into connected peer");
 		IPAddress req = IPAddress.newBuilder().setAddress(address).setPort(port).build();
-		Empty res;
+		CommonResponse res;
+		boolean isSuccess = false;
 		try {
 			res = blockingStub.addAddress(req);
+			isSuccess = res.getSuccess();
 		} catch (StatusRuntimeException e) {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
 			return;
 		}
-		logger.info("address set done");
+		
+		logger.info("address set done(" + isSuccess + ")");
 	}
 
 	public void setAddressBook(ArrayList<IPAddress> addressBook) throws InterruptedException {
 		logger.info("Setting addressbook into connected peer");
 		final CountDownLatch latch = new CountDownLatch(1);
-		StreamObserver<Empty> responseObserver = new StreamObserver<Empty>() {
+		StreamObserver<CommonResponse> responseObserver = new StreamObserver<CommonResponse>() {
+			boolean isSuccess = false;
 			@Override
-			public void onNext(Empty empty) {
-				// do nothing
+			public void onNext(CommonResponse res) {
+				// prints status
+				isSuccess = res.getSuccess();
 			}
 
 			@Override
@@ -93,7 +98,7 @@ public class PlumClient {
 
 			@Override
 			public void onCompleted() {
-				logger.info("finish setAddressBook");
+				logger.info("finish setAddressBook: " + isSuccess);
 				latch.countDown();
 			}
 		};
@@ -119,7 +124,7 @@ public class PlumClient {
 
 	public ArrayList<IPAddress> getAddressBook() {
 		ArrayList<IPAddress> addressBook = new ArrayList<IPAddress>();
-		Empty req = Empty.newBuilder().build();
+		CommonRequest req = CommonRequest.newBuilder().build();
 
 		Iterator<IPAddress> addresses;
 		try {
@@ -149,7 +154,7 @@ public class PlumClient {
 
 	public ArrayList<Transaction> getMemPool() {
 		ArrayList<Transaction> memPool = new ArrayList<Transaction>();
-		Empty req = Empty.newBuilder().build();
+		CommonRequest req = CommonRequest.newBuilder().build();
 
 		Iterator<Transaction> transactions;
 		try {

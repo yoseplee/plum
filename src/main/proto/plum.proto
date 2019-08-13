@@ -21,13 +21,13 @@ service PlumService {
     rpc getIP(Empty) returns (IPAddress) {}
 
     // address which peer have related features
-    rpc addAddress(IPAddress) returns (Empty) {}
-    rpc setAddressBook(stream IPAddress) returns (Empty) {}
-    rpc getAddressBook(Empty) returns (stream IPAddress) {}
+    rpc addAddress(IPAddress) returns (CommonResponse) {}
+    rpc setAddressBook(stream IPAddress) returns (CommonResponse) {}
+    rpc getAddressBook(CommonRequest) returns (stream IPAddress) {}
 
     // simple transaction and gossip
     rpc addTransaction(Transaction) returns (TransactionResponse) {}
-    rpc getMemPool(Empty) returns (stream Transaction) {}
+    rpc getMemPool(CommonRequest) returns (stream Transaction) {}
 }
 
 // is alive?
@@ -40,9 +40,13 @@ message HelloReply {
 }
 
 // networking
-// possibly chane message Empty to CommonResponse
-message Empty {
+message CommonRequest {
+    string request = 1;
+}
 
+message CommonResponse {
+    bool success = 1;
+    string error = 2;
 }
 
 message IPAddress {
