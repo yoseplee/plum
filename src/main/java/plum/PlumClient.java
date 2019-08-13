@@ -52,7 +52,7 @@ public class PlumClient {
 
 	public void getIP() {
 		logger.info("Will try to get IP from gRPC server");
-		Empty req = Empty.newBuilder().build();
+		CommonRequest req = CommonRequest.newBuilder().build();
 		IPAddress res;
 		try {
 			res = blockingStub.getIP(req);

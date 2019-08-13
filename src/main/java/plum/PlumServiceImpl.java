@@ -28,7 +28,7 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
 
     // networking
     @Override
-    public void getIP(Empty req, StreamObserver<IPAddress> responseObserver) {
+    public void getIP(CommonRequest req, StreamObserver<IPAddress> responseObserver) {
         try {
             InetAddress local = InetAddress.getLocalHost();
             String myIp = local.getHostAddress().toString();
