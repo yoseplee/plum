@@ -7,7 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import io.grpc.stub.StreamObserver;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.net.InetAddress;
 
 public class PlumConductor {
 	private static final Logger logger = Logger.getLogger(PlumConductor.class.getName());
@@ -48,7 +50,7 @@ public class PlumConductor {
 			server.awaitTermination();
 		}
 	}
-
+	
 	// getters and setters
 	public int getPort() {
 		return this.port;
