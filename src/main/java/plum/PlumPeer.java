@@ -59,7 +59,7 @@ public class PlumPeer {
 	// notify this peer's participation to conductor
 	private void notifyToConductor() {
 		// current conductor's address
-		PlumClient toConductor = new PlumClient("localhost", 50055);
+		PlumClient toConductor = new PlumClient("220.149.235.74", 50055);
 
 		// add my address to conductor
 		try {

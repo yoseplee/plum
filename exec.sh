@@ -8,6 +8,7 @@ if [ x$1 == x ]; then
 	echo "./exec.sh [argument]"
 	echo "peer | run plum peer"
 	echo "client | run plum client"
+	echo "conductor | run plum conductor"
 	exit
 fi
 
@@ -15,6 +16,8 @@ if [ ${which} == "peer" ]; then
 	mainClass="plum.PlumPeer"
 elif [ ${which} == "client" ]; then
 	mainClass="plum.PlumClient"
+elif [ ${which} == "conductor" ]; then
+	mainClass="plum.PlumConductor"
 fi
 
 echo "exec via mvn... mainClass=${mainClass}"

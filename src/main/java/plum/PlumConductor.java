@@ -50,7 +50,7 @@ public class PlumConductor {
 			server.awaitTermination();
 		}
 	}
-	
+
 	// getters and setters
 	public int getPort() {
 		return this.port;

@@ -1,49 +1,49 @@
 version: '3'
 
 services:
-  plum-conductor:
-    container_name: plum-conductor
-    image: yoseplee/plum-conductor:0.1
-    working_dir: /plum/
-    ports:
-      - "50055:50055"
+  # plum-conductor:
+  #   container_name: plum-conductor
+  #   image: yoseplee/plum-conductor:0.1.2
+  #   working_dir: /plum/
+  #   ports:
+  #     - "50055:50055"
   plum-1:
     container_name: plum-1
-    image: yoseplee/plum:0.2.1
+    image: yoseplee/plum:0.3
     working_dir: /plum/
     ports:
       - "32120:50051"
-    depends_on: 
-      - plum-conductor
+    # depends_on: 
+    #   - plum-conductor
   plum-2:
     container_name: plum-2
-    image: yoseplee/plum:0.2.1
+    image: yoseplee/plum:0.3
     working_dir: /plum/
     ports:
       - "32121:50051"
-    depends_on: 
-      - plum-conductor
+    # depends_on: 
+    #   - plum-conductor
   plum-3:
     container_name: plum-3
-    image: yoseplee/plum:0.2.1
+    image: yoseplee/plum:0.3
     working_dir: /plum/
     ports:
       - "32122:50051"
-    depends_on: 
-      - plum-conductor
+    # depends_on: 
+    #   - plum-conductor
   plum-4:
     container_name: plum-4
-    image: yoseplee/plum:0.2.1
+    image: yoseplee/plum:0.3
     working_dir: /plum/
     ports:
       - "32123:50051"
-    depends_on: 
-      - plum-conductor
+    # depends_on: 
+    #   - plum-conductor
   plum-5:
     container_name: plum-5
-    image: yoseplee/plum:0.2.1
+    image: yoseplee/plum:0.3
     working_dir: /plum/
     ports:
       - "32124:50051"
-    depends_on: 
-      - plum-conductor
+    # depends_on: 
+    #   - plum-conductor
