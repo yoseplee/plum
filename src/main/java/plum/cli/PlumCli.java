@@ -2,6 +2,7 @@ package plum.cli;
 
 import plum.*;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 import java.util.ArrayList;
 
 public class PlumCli {
@@ -20,10 +21,11 @@ public class PlumCli {
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "sayHello", "send say hello to connect peer"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "getIP", "get IP address from connected peer, and add it to client's local addressBook"));
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "addAddress", "send a single address to connected peer so that it can add it to its addressBook"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "setAddressbook", "send a list of address to connected peer so that it can add it to its addressBook"));;
-        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "printAddressbook", "print all the addressess connected peer have"));;
+        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "setAddressBook", "send a list of address to connected peer so that it can add it to its addressBook"));;
+        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "printAddressBook", "print all the addressess connected peer have"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "addTransaction", "add a transaction to peer and gossip"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "printMempool", "print all the mempool of connected peer have"));;
+        System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "clearAddressBook", "clear out address book of connected peer"));;
         System.out.println(String.format("%-4s%-20s|%-50s", "*--|", "exit", "quit client"));;
 
     }
@@ -54,6 +56,32 @@ public class PlumCli {
         System.out.println("help command for listing up commands that client have");
     }
 
+    public static void closeAllConnections(ArrayList<PlumClient> clientList) {
+        int size = clientList.size();
+        System.out.println("close all connections(" + size + ")");
+        if(size == 0) {
+            System.out.println("PlumClient List Empty");
+            return;
+        }
+        CountDownLatch latch = new CountDownLatch(size);
+        for(PlumClient client : clientList) {
+            new Thread(() -> {
+                try {
+                    client.shutdown();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                latch.countDown();
+            }).start();
+        }
+        try {
+            latch.await();
+            System.out.println("all connections are closed");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public PlumCli() {}
     public static void main(String[] args) {
         ArrayList<PlumClient> clientList = new ArrayList<PlumClient>();
@@ -65,6 +93,7 @@ public class PlumCli {
         Scanner scan = new Scanner(System.in);
         ArrayList<IPAddress> addressBook = new ArrayList<IPAddress>();
         welcomeCli();
+        help();
         while(true) {
             System.out.print("&> ");
             String command = "";
@@ -76,11 +105,13 @@ public class PlumCli {
                 case "connect":
                     System.out.print("Which host(v4)? &> ");
                     String host = scan.nextLine();
-                    System.out.println("try to connect to host: " + host);
-                    PlumClient client = new PlumClient(host, 50051);
+                    System.out.print("Which port(default| peer:50051, conductor: 50055)? &> ");
+                    int port = Integer.parseInt(scan.nextLine());
+                    System.out.println("try to connect to host: " + host + ":" + port);
+                    PlumClient client = new PlumClient(host, port);
                     addressBook.add(client.getIP());
                     clientList.add(client);
-                    System.out.println("connected to " + host);
+                    System.out.println("connected to " + host + ":" + port);
                     break;           
                 case "list":
                     printAllClients(clientList);
@@ -88,6 +119,7 @@ public class PlumCli {
                 case "use":
                     int clientIdx = -1;
                     printAllClients(clientList);
+                    if(clientList.size() == 0) continue;
                     System.out.print("which client to use? (idx) &> ");
                     clientIdx = Integer.parseInt(scan.nextLine());
                     //check bound
@@ -98,6 +130,7 @@ public class PlumCli {
                     currentClient = clientList.get(clientIdx-1);
                     System.out.println(currentClient);
                     welcomePeer();
+                    clientHelp();
                     while(true) {
                         String response = "";
                         System.out.printf("%10s | &> ", currentClient.getHost());
@@ -121,7 +154,7 @@ public class PlumCli {
                                 IPAddress addrToAdd = IPAddress.newBuilder().setAddress(address).setPort(50051).build();
                                 // response = currentClient.addAddress(addrToAdd);
                                 break;
-                            case "setAddressbook":
+                            case "setAddressBook":
                                 //set client addressBook from cli
                                 try {
                                     currentClient.setAddressBook(addressBook);                     
@@ -131,7 +164,7 @@ public class PlumCli {
                                 //set peer addressBook from client
                                 // response = currentClient.addAddressbook();
                                 break;
-                            case "printAddressbook":
+                            case "printAddressBook":
                                 ArrayList<IPAddress> book = currentClient.getAddressBook();
                                 for(IPAddress temp : book) {
                                     System.out.println("address:: " + temp.getAddress() + ":" + temp.getPort());
@@ -148,6 +181,14 @@ public class PlumCli {
                                     System.out.println("transaction from peer mempool: " + temp.getTransaction());
                                 }
                                 break;
+                            case "clearAddressBook":
+                                ArrayList<IPAddress> emptyAddressBook = new ArrayList<IPAddress>();
+                                try {
+                                    currentClient.setAddressBook(emptyAddressBook);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
                             default:
                                 break;
                         }
@@ -155,14 +196,15 @@ public class PlumCli {
                             System.out.println("..back to CLI");
                             break;
                         }
-                        //print
-                        if(!response.isEmpty()) System.out.println("response: " + response);
                     }
                     welcomeCli();
+                    help();
                     break;
                 case "exit":
                     System.out.println("Bye");
                     scan.close();
+                    // close all the peer connections?
+                    closeAllConnections(clientList);
                     return;
                 default:
                     break;
