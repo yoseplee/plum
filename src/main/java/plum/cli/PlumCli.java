@@ -182,12 +182,7 @@ public class PlumCli {
                                 }
                                 break;
                             case "clearAddressBook":
-                                ArrayList<IPAddress> emptyAddressBook = new ArrayList<IPAddress>();
-                                try {
-                                    currentClient.setAddressBook(emptyAddressBook);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                currentClient.clearAddressBook();
                                 break;
                             default:
                                 break;

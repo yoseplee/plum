@@ -64,6 +64,11 @@ public class PlumConductor {
 		return this.addressBook;
 	}
 
+	// utils
+	public void clearAddressBook() {
+		this.addressBook.clear();
+	}
+
 	// entry point of PlumConductor
 	public static void main(String[] args) {
 
@@ -184,6 +189,16 @@ public class PlumConductor {
 			for (IPAddress address : addressBook) {
 				responseObserver.onNext(address);
 			}
+			responseObserver.onCompleted();
+		}
+
+		@Override
+		public void clearAddressBook(CommonRequest req, StreamObserver<CommonResponse> responseObserver) {
+			CommonResponse res = CommonResponse.newBuilder().setSuccess(true).build();
+			
+			thisConductor.clearAddressBook();
+			
+			responseObserver.onNext(res);
 			responseObserver.onCompleted();
 		}
 	}

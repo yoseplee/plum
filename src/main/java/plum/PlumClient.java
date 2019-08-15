@@ -145,6 +145,16 @@ public class PlumClient {
 		return addressBook;
 	}
 
+	public void clearAddressBook() {
+		CommonRequest req = CommonRequest.newBuilder().build();
+		CommonResponse res;
+		try {
+			res = blockingStub.clearAddressBook(req);
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+		}
+	}
+
 	public void addTransaction(Transaction transaction) {
 		logger.info("add transaction to connected peer");
 		TransactionResponse res;
