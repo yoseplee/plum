@@ -171,7 +171,7 @@ public class PlumClient {
 
 	// entry point of client
 	public static void main(String[] args) throws Exception {
-		PlumClient client = new PlumClient("localhost", 50051);
+		PlumClient client = new PlumClient("localhost", 50055);
 		try {
 			client.sayHello("HI");
 			client.getIP();

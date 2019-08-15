@@ -5,6 +5,8 @@ import io.grpc.ServerBuilder;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.ArrayList;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class PlumPeer {
 	private static final Logger logger = Logger.getLogger(PlumPeer.class.getName());
@@ -34,6 +36,7 @@ public class PlumPeer {
 	private void start() throws IOException {
 		server.start();
 		logger.info("Server started, listening on " + port);
+		notifyToConductor();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.err.println("*** shutting down gRPC server since JVM is shutting down");
 			PlumPeer.this.stop();
@@ -51,6 +54,27 @@ public class PlumPeer {
 		if (server != null) {
 			server.awaitTermination();
 		}
+	}
+
+	// notify this peer's participation to conductor
+	private void notifyToConductor() {
+		// current conductor's address
+		PlumClient toConductor = new PlumClient("220.149.235.74", 50055);
+
+		// add my address to conductor
+		try {
+			InetAddress local = InetAddress.getLocalHost();
+			String myIp = local.getHostAddress().toString();
+			toConductor.addAddress(myIp, 50051);
+			Thread.sleep(3000);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// get all addressbook from conductor
+		this.addressBook = toConductor.getAddressBook();
 	}
 
 	// getters and setters
