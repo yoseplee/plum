@@ -148,11 +148,18 @@ public class PlumCli {
                                 response = currentClient.getIP().getAddress();
                                 break;
                             case "addAddress":
-                                String address = "";
-                                System.out.println("which address to add? &> ");
-                                address = scan.nextLine();
-                                IPAddress addrToAdd = IPAddress.newBuilder().setAddress(address).setPort(50051).build();
-                                // response = currentClient.addAddress(addrToAdd);
+                                System.out.println("which address to add(v4)? &> ");
+                                String addressToAdd = scan.nextLine();
+                                System.out.println("which port? &> ");
+                                int portToAdd = 0;
+                                try {
+                                    portToAdd = Integer.parseInt(scan.nextLine());
+                                } catch (Exception e) {
+                                    System.err.println("UNEXPECTED: port number is integer.");
+                                    e.printStackTrace();
+                                    continue;
+                                }
+                                currentClient.addAddress(addressToAdd, portToAdd);
                                 break;
                             case "setAddressBook":
                                 //set client addressBook from cli
