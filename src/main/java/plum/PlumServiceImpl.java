@@ -150,6 +150,9 @@ public class PlumServiceImpl extends PlumServiceGrpc.PlumServiceImplBase {
         for(int i = 0; i < GOSSIPBOUND; ++i) {
             int rndIdx = random.nextInt(addressBook.size());
             IPAddress clientAddress = addressBook.get(rndIdx);
+            String addressToSend = clientAddress.getAddress();
+            int portToSend = clientAddress.getPort();
+            logger.log(Level.INFO, "[GOSSIP] send to " + addressToSend + ":" + portToSend + "||" + transaction.getTransaction());
             
             //send to that client in thread(gossip: fire and forget)
             new Thread(() -> {

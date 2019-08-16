@@ -180,12 +180,16 @@ public class PlumCli {
                             case "addTransaction":
                                 String transaction = "";
                                 System.out.println("which transaction to add? &> ");
-                                currentClient.addTransaction(Transaction.newBuilder().setTransaction(transaction).build());
+                                transaction = scan.nextLine();
+                                long currentTime = System.currentTimeMillis();
+                                Transaction transactionToAdd = Transaction.newBuilder().setTransaction(transaction).setTime(currentTime).build();
+                                currentClient.addTransaction(transactionToAdd);
                                 break;
                             case "printMempool":
                                 ArrayList<Transaction> memPool = currentClient.getMemPool();
                                 for(Transaction temp : memPool) {
-                                    System.out.println("transaction from peer mempool: " + temp.getTransaction());
+                                    // System.out.println("transaction from peer mempool: " + temp.getTransaction());
+                                    System.out.printf("%10s | %10d\n", temp.getTransaction(), temp.getTime());
                                 }
                                 break;
                             case "clearAddressBook":
