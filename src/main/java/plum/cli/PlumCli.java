@@ -133,7 +133,7 @@ public class PlumCli {
                     clientHelp();
                     while(true) {
                         String response = "";
-                        System.out.printf("%10s | &> ", currentClient.getHost());
+                        System.out.printf("%10s:%5s | &> ", currentClient.getHost(), currentClient.getPort());
                         String message = scan.nextLine();
                         //send RMI call
                         switch(message) {
