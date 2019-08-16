@@ -19,10 +19,14 @@ public class PlumClient {
 	private final ManagedChannel channel;
 	private final PlumServiceBlockingStub blockingStub;
 	private final PlumServiceStub asyncStub;
+	private String host;
+	private int port;
 
 	// initializer suite
 	public PlumClient(String host, int port) {
 		this(ManagedChannelBuilder.forAddress(host, port).usePlaintext());
+		this.host = host;
+		this.port = port;
 	}
 
 	public PlumClient(ManagedChannelBuilder<?> channelBuilder) {
@@ -50,7 +54,7 @@ public class PlumClient {
 		logger.info("Greeting: " + response.getMessage());
 	}
 
-	public void getIP() {
+	public IPAddress getIP() {
 		logger.info("Will try to get IP from gRPC server");
 		CommonRequest req = CommonRequest.newBuilder().build();
 		IPAddress res;
@@ -58,9 +62,10 @@ public class PlumClient {
 			res = blockingStub.getIP(req);
 		} catch (StatusRuntimeException e) {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-			return;
+			return IPAddress.newBuilder().build();
 		}
 		logger.info("IP: " + res.getAddress() + ":" + res.getPort());
+		return res;
 	}
 
 	public void addAddress(String address, int port) {
@@ -140,6 +145,16 @@ public class PlumClient {
 		return addressBook;
 	}
 
+	public void clearAddressBook() {
+		CommonRequest req = CommonRequest.newBuilder().build();
+		CommonResponse res;
+		try {
+			res = blockingStub.clearAddressBook(req);
+		} catch (StatusRuntimeException e) {
+			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+		}
+	}
+
 	public void addTransaction(Transaction transaction) {
 		logger.info("add transaction to connected peer");
 		TransactionResponse res;
@@ -167,6 +182,15 @@ public class PlumClient {
 			logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
 		}
 		return memPool;
+	}
+
+	// getters
+	public String getHost() {
+		return this.host;
+	}
+
+	public int getPort() {
+		return this.port;
 	}
 
 	// entry point of client

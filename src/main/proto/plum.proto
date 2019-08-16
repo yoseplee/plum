@@ -24,6 +24,7 @@ service PlumService {
     rpc addAddress(IPAddress) returns (CommonResponse) {}
     rpc setAddressBook(stream IPAddress) returns (CommonResponse) {}
     rpc getAddressBook(CommonRequest) returns (stream IPAddress) {}
+    rpc clearAddressBook(CommonRequest) returns (CommonResponse) {}
 
     // simple transaction and gossip
     rpc addTransaction(Transaction) returns (TransactionResponse) {}
