@@ -1,0 +1,39 @@
+version: '3.0'
+
+services:
+  plum0:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=0
+      - PEER_AMOUNT=4
+      - CONSENSUS=${CONSENSUS}
+    ports:
+    - 50051:50051
+    networks:
+      - plum_experiment_network
+  plum1:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=1
+      - PEER_AMOUNT=4
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum2:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=2
+      - PEER_AMOUNT=4
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum3:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=3
+      - PEER_AMOUNT=4
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+networks:
+  plum_experiment_network:

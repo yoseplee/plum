@@ -1,0 +1,4 @@
+set xlabel = "xlabel"
+set ylabel = "ylabel"
+set title "graph title"
+plot for[i = 0:9] "result_".i.".txt" u 2:4 w lines linewidth 2 title "node".i

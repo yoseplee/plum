@@ -1,0 +1,131 @@
+profile:
+  - ABC_PLUM_MACHINE_0:
+      PEER_ID: 0
+      CONTAINER_NAME: "plum0"
+      IPV4: ""
+      PORT: ":50051"
+  - ABC_PLUM_MACHINE_1:
+      PEER_ID: 1
+      CONTAINER_NAME: "plum1"
+      IPV4: ""
+      PORT: ":50051"
+  - ABC_PLUM_MACHINE_2:
+      PEER_ID: 2
+      CONTAINER_NAME: "plum2"
+      IPV4: ""
+      PORT: ":50051"
+  - ABC_PLUM_MACHINE_3:
+      PEER_ID: 3
+      CONTAINER_NAME: "plum3"
+      IPV4: ""
+      PORT: ":50051"
+  - ABC_PLUM_MACHINE_4:
+      PEER_ID: 4
+      CONTAINER_NAME: "plum4"
+      IPV4: ""
+      PORT: ":50051"
+  - ABC_PLUM_MACHINE_5:
+      PEER_ID: 5
+      CONTAINER_NAME: "plum5"
+      IPV4: ""
+      PORT: ":50061"
+  - ABC_PLUM_MACHINE_6:
+      PEER_ID: 6
+      CONTAINER_NAME: "plum6"
+      IPV4: ""
+      PORT: ":50071"
+  - ABC_PLUM_MACHINE_7:
+      PEER_ID: 7
+      CONTAINER_NAME: "plum7"
+      IPV4: ""
+      PORT: ":50051"
+  - ABC_PLUM_MACHINE_8:
+      PEER_ID: 8
+      CONTAINER_NAME: "plum8"
+      IPV4: ""
+      PORT: ":50061"
+  - ABC_PLUM_MACHINE_9:
+      PEER_ID: 9
+      CONTAINER_NAME: "plum9"
+      IPV4: ""
+      PORT: ":50071"
+  - ABC_PLUM_MACHINE_10:
+      PEER_ID: 10
+      CONTAINER_NAME: "plum10"
+      IPV4: ""
+      PORT: ":50081"
+  - ABC_PLUM_MACHINE_11:
+      PEER_ID: 11
+      CONTAINER_NAME: "plum11"
+      IPV4: ""
+      PORT: ":50091"
+  - ABC_PLUM_MACHINE_12:
+      PEER_ID: 12
+      CONTAINER_NAME: "plum12"
+      IPV4: ""
+      PORT: ":50101"
+  - ABC_PLUM_MACHINE_13:
+      PEER_ID: 13
+      CONTAINER_NAME: "plum13"
+      IPV4: ""
+      PORT: ":50111"
+  - ABC_PLUM_MACHINE_14:
+      PEER_ID: 14
+      CONTAINER_NAME: "plum14"
+      IPV4: ""
+      PORT: ":50121"
+  - ABC_PLUM_MACHINE_15:
+      PEER_ID: 15
+      CONTAINER_NAME: "plum15"
+      IPV4: ""
+      PORT: ":50131"
+  - ABC_PLUM_MACHINE_16:
+      PEER_ID: 16
+      CONTAINER_NAME: "plum16"
+      IPV4: ""
+      PORT: ":50141"
+  - ABC_PLUM_MACHINE_17:
+      PEER_ID: 17
+      CONTAINER_NAME: "plum17"
+      IPV4: ""
+      PORT: ":50151"
+  - ABC_PLUM_MACHINE_18:
+      PEER_ID: 18
+      CONTAINER_NAME: "plum18"
+      IPV4: ""
+      PORT: ":50161"
+  - ABC_PLUM_MACHINE_19:
+      PEER_ID: 19
+      CONTAINER_NAME: "plum19"
+      IPV4: ""
+      PORT: ":50171"
+  - ABC_PLUM_MACHINE_20:
+      PEER_ID: 20
+      CONTAINER_NAME: "plum20"
+      IPV4: ""
+      PORT: ":50181"
+  - ABC_PLUM_MACHINE_21:
+      PEER_ID: 21
+      CONTAINER_NAME: "plum21"
+      IPV4: ""
+      PORT: ":50191"
+  - ABC_PLUM_MACHINE_22:
+      PEER_ID: 22
+      CONTAINER_NAME: "plum22"
+      IPV4: ""
+      PORT: ":50201"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

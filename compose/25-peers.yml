@@ -1,0 +1,207 @@
+version: '3.0'
+
+services:
+  plum0:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=0
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    ports:
+    - 50051:50051
+    networks:
+      - plum_experiment_network
+  plum1:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=1
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum2:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=2
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum3:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=3
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum4:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=4
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum5:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=5
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum6:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=6
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum7:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=7
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum8:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=8
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum9:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=9
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum10:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=10
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum11:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=11
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum12:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=12
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum13:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=13
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum14:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=14
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum15:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=15
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum16:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=16
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum17:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=17
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum18:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=18
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum19:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=19
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum20:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=20
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum21:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=21
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum22:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=22
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum23:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=23
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+  plum24:
+    image: yoseplee/plum:0.4
+    environment:
+      - PEER_ID=24
+      - PEER_AMOUNT=25
+      - CONSENSUS=${CONSENSUS}
+    networks:
+      - plum_experiment_network
+networks:
+  plum_experiment_network:

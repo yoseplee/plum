@@ -1,0 +1,207 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+//option go_package = "github.com/yoseplee/plum/core/peer/plum";
+option java_multiple_files = true;
+option java_package = "com.yoseplee.plum.peer";
+option java_outer_classname = "plumPeer";
+
+package plum;
+
+service Gossip {
+  rpc GossipStream (stream Envelope) returns (stream Envelope);
+  rpc Ping(Empty) returns (Empty);
+}
+
+service Consensus {
+  rpc ServePBFTPhase (PBFTRequest) returns (PBFTResponse);
+  rpc ServeXBFTPhase (XBFTRequest) returns (XBFTResponse);
+}
+
+service Farmer {
+  rpc GetPeerState (Empty) returns (PeerState);
+  rpc GetPeerStateStream (Empty) returns (stream PeerState);
+}
+
+service Peer {
+  rpc PingPong(Ping) returns (Pong) {}
+  rpc SetPublicKey (PublicKey) returns (Empty);
+  rpc GetPublicKey (Empty) returns (PublicKey);
+  rpc GetPublicKeyAllStream (Empty) returns (stream PublicKey);
+}
+
+message Ping {
+  string name = 1;
+}
+
+message Pong {
+  string message = 1;
+}
+
+message PublicKey {
+  uint32 id = 1;
+  string ipv4 = 2;
+  string port = 3;
+  bytes key = 4;
+}
+
+message PeerState {
+  uint32 id = 1;
+  string ipv4 = 2;
+  string port = 3;
+  ConsensusRole role = 4;
+  uint64 consensusRound = 5;
+  uint32 currentPrimary = 6;
+  PBFTPhase consensusPhase = 7;
+  map<int32, int32> vote = 8;
+  ConsensusState consensusState = 9;
+  uint64 blockHeight = 10;
+  uint64 queueLength = 11;
+  int64 heapLength = 12;
+  double reputation = 13;
+  uint64 selectedCount = 14;
+  uint64 tentativeSelectedCount = 15;
+}
+
+//Empty is for message without content
+message Empty {}
+
+//bytes is []byte in golang
+message Envelope {
+  bytes payload = 1;
+  bytes signature = 2;
+}
+
+message PBFTRequest {
+  PBFTMessage message = 1;
+  bytes signature = 2;
+  Block block = 3;
+}
+
+message PBFTResponse {
+  ResponseStatus status = 1;
+  oneof result {
+    bytes msg = 2;
+    ConsensusValidationCode error = 3;
+  }
+}
+
+message PBFTMessage {
+  PBFTPhase phase = 1;
+  uint64 round = 2;
+  bytes digest = 3;
+  uint32 peerId = 4;
+}
+
+message XBFTRequest {
+  XBFTMessage message = 1;
+  bytes signature = 2;
+  Block block = 3;
+}
+
+message XBFTResponse {
+  ResponseStatus status = 1;
+  oneof result {
+    bytes msg = 2;
+    ConsensusValidationCode error = 3;
+  }
+}
+
+message XBFTMessage {
+  XBFTPhase phase = 1;
+  uint64 round = 2;
+  uint64 height = 3;
+  bytes digest = 4;
+  uint32 peerId = 5;
+  double selectionValue = 6;
+  bytes proof = 7;
+  uint32 primaryId = 8;
+  Certificate preparedCertificate = 9;
+  Certificate committedCertificate = 10;
+  Certificate roundChangeCertificate = 11;
+}
+
+message CommitteeMembers {
+  uint32 peerId = 1;
+  uint64 round = 2;
+  double selectionValue = 3;
+  bytes proof = 4;
+}
+
+message Certificate {
+  repeated XBFTRequest cert = 1;
+}
+
+message Block {
+  Header header = 1;
+  Body body = 2;
+  repeated CommitteeMembers committeeMembers = 3;
+  repeated CommitteeMembers roundChangedCommitteeMembers = 4;
+}
+
+message Header {
+  uint64 id = 1;
+  bytes merkleRoot = 2;
+  bytes prevBlockHash = 3;
+  google.protobuf.Timestamp time = 4;
+}
+
+message Body {
+  MerkleTree merkleTree = 1;
+  repeated bytes Txs = 2;
+}
+
+message MerkleTree {
+  MerkleNode Root = 1;
+}
+
+message MerkleNode {
+  MerkleNode L = 1;
+  MerkleNode R = 2;
+  bytes D = 3;
+}
+
+enum PBFTPhase {
+  PBFTRoundChange = 0;
+  PBFTNewRound = 1;
+  PBFTPrePrepare = 2;
+  PBFTPrepare = 3;
+  PBFTCommit = 4;
+}
+
+enum XBFTPhase {
+  XBFTRoundChange = 0;
+  XBFTPrePrepare = 1;
+  XBFTPrepare = 2;
+  XBFTCommit = 3;
+  XBFTSelect = 4;
+  XBFTNewRound = 5;
+}
+
+enum ConsensusState {
+  Idle = 0;
+  PrePrepared = 1;
+  Prepared = 2;
+  Committed = 3;
+  Selected = 4;
+}
+
+enum ResponseStatus {
+  Success = 0;
+  Failed = 1;
+}
+
+enum ConsensusValidationCode {
+  TimeOut = 0;
+  Invalid = 1;
+  BadRequest = 2;
+  BadResponse = 3;
+  RoundTooFast = 4;
+}
+
+enum ConsensusRole {
+  Primary = 0;
+  Backup = 1;
+  CommitteeMember = 2;
+}

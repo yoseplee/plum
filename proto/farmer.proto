@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.yoseplee.plum.farmer";
+option java_outer_classname = "plumFarmerProto";
+
+package farmer;
+
+service Cropper {
+  rpc PingPong(Ping) returns (Pong) {}
+  rpc Harvest(Crop) returns (Log) {}
+}
+
+message Crop {
+  string path = 1;
+  string filename = 2;
+  string params = 3;
+}
+
+message Log {
+  string status = 1;
+  string log = 2;
+}
+
+message Ping {
+  string name = 1;
+}
+
+message Pong {
+  string message = 1;
+}
